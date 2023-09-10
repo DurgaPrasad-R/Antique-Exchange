@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login: AntiqueExchange</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background-color: #01BCE1;
+        }
+
+        .main {
+            height: 100vh;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .profile{
+            display: flex;
+            justify-content: center;
+        }
+
+        label,
+        input[type=submit] {
+            font-weight: 600;
+        }
+
+        input {
+            margin: 10px 0;
+            width: 25vmax;
+            height: 5vmin;
+            font-size: 2.5vmin;
+            padding: 0 1vmin;
+            border-radius: 4px;
+            border: 1px solid black;
+        }
+
+        input[type=submit]{
+            background-color: #1240B2;
+            color: white;
+            border: 1px solid black;
+            cursor: pointer;
+        }
+
+        .ack{
+            display: flex;
+            justify-content: center;
+        }
+
+        @media (max-width:600px) {
+            .img-1{
+                display: none;
+            }    
+
+            input {
+                margin: 10px 0;
+                width: 40vmax;
+                height: 5vmin;
+                font-size: 2.5vmin;
+                padding: 0 1vmin;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <form action="/loginSubmit">
+            <div class="profile">
+                <img src="images/profile.png" alt="">
+            </div>
+            <div class="inputs">
+                <label for="email">Enter your email:</label><br>
+                <input type="email" name="Email" id="email" placeholder="Enter your email:">
+            </div>
+            <div class="inputs">
+                <label for="password">Enter your password:</label><br>
+                <input type="password" name="Password" id="password" placeholder="Enter your password:">
+            </div>
+            <div class="input_btn">
+                <input type="submit" value="Login">
+            </div>
+            <div class="ack">
+                <a href="/signup">Don't have an account?</a>
+            </div>
+        </form>
+        <div class="img-1">
+            <img src="images/img-1.png" alt="Image here" width="350vmax">
+        </div>
+    </div>
+</body>
+</html>
