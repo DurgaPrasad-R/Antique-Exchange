@@ -12,12 +12,10 @@ body{
 
 header{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     background-color: #2874F0;
     font-weight: 600;
-    border: 1px solid black;
     padding: 3vh;
-    margin: 2vh 3vh;
     color: whitesmoke;
 }
 
@@ -36,29 +34,24 @@ nav ul{
 
 nav ul li{
     display: inline-block;
-    padding: 1vh;
-    margin-left: 3vh;
-    border: 1px solid black;
+    padding: 2vh;
+    margin-left: 4vh;
 }
 
 nav ul a{
     color: white;
 }
 
-.btn,.toggle{
+.btn{
     display: inline;
-    float: right;
     padding: 2vh;
-    margin: 0 3vh;
+    margin: 0 4vh;
     cursor: pointer;
-    border: 1px solid black;
+    border: 1px solid white;
 }
 
-/*.btn{
-    padding: 2vh;
-}
 
-.btn a{
+/*.btn a{
     color: white;
     background-color: #1240B2;
     padding: 1vh;
