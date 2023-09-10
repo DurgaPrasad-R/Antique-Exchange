@@ -12,16 +12,17 @@ body{
 
 header{
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
+    background-color: #2874F0;
     font-weight: 600;
     border: 1px solid black;
     padding: 3vh;
     margin: 2vh 3vh;
-    color: rgb(113, 113, 113);
+    color: whitesmoke;
 }
 
 .mylogo{
-    padding: 1vh;
+    padding: 2vh;
 }
 
 .logo_img{
@@ -41,7 +42,7 @@ nav ul li{
 }
 
 nav ul a{
-    color: rgb(113, 113, 113);
+    color: white;
 }
 
 .btn,.toggle{
