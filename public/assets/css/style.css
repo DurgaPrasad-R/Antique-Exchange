@@ -14,6 +14,10 @@ header{
     display: flex;
     justify-content: space-around;
     background-color: #2874F0;
+    position: sticky;
+    top: 0;
+    width: 100vw;
+    height: 80px;
     font-weight: 600;
     padding: 1vh;
     color: white;
@@ -72,4 +76,24 @@ nav ul li a{
 
 .btn a{
     color: #2874F0;
+}
+
+section{
+    min-height: 1600px;
+    height: calc(100vh-80px);
+}
+
+section .container{
+    padding-top: 2vh;
+    display: flex;
+    background-color: lightgray;
+    justify-content: space-around;
+}
+
+.card-1 img{
+    height: 15vh;
+}
+
+section .content{
+    text-align: center;
 }
