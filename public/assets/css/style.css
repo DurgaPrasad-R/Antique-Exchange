@@ -8,7 +8,6 @@
 
 body{
     font-family: 'Bricolage Grotesque', sans-serif;
-    /* font-weight: 400; */
 }
 
 header{
@@ -16,7 +15,7 @@ header{
     justify-content: space-around;
     background-color: #2874F0;
     font-weight: 600;
-    padding: 3vh;
+    padding: 1vh;
     color: white;
 }
 
@@ -27,8 +26,9 @@ header{
 }
 
 .mylogo .title{
-    font-size: large;
-    padding: 1vh;
+    font-size: x-large;
+    display: flex;
+    align-items: center;
 }
 
 .logo_img{
@@ -38,11 +38,11 @@ header{
 
 nav ul{
     list-style: none;
-    padding: 1vh;
+    display: flex;
+    align-items: center;
 }
 
 nav ul li{
-    display: inline-block;
     padding: 2vh;
     margin-left: 3vh;
 }
@@ -52,13 +52,21 @@ nav ul li a{
     font-weight: 400;
 }
 
+.cart-item{
+    display: flex;
+    align-items: center;
+}
+
 .btn{
-    display: inline;
+    display: inline-block;
+    width: 5vmax;
     padding: 2vh;
     margin: 0 4vh;
     cursor: pointer;
     background-color: white;
     border: 1px solid white;
+    border-radius: 4px;
+    text-align: center;
 }
 
 
