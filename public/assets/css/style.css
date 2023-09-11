@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,400;10..48,800&display=swap');
 * {
     margin: 0;
     padding: 0;
@@ -8,6 +8,7 @@
 
 body{
     font-family: 'Bricolage Grotesque', sans-serif;
+    /* font-weight: 400; */
 }
 
 header{
@@ -16,11 +17,18 @@ header{
     background-color: #2874F0;
     font-weight: 600;
     padding: 3vh;
-    color: whitesmoke;
+    color: white;
 }
 
 .mylogo{
     padding: 2vh;
+    display: flex;
+    justify-content: center;
+}
+
+.mylogo .title{
+    font-size: large;
+    padding: 1vh;
 }
 
 .logo_img{
@@ -30,16 +38,18 @@ header{
 
 nav ul{
     list-style: none;
+    padding: 1vh;
 }
 
 nav ul li{
     display: inline-block;
     padding: 2vh;
-    margin-left: 4vh;
+    margin-left: 3vh;
 }
 
-nav ul a{
+nav ul li a{
     color: white;
+    font-weight: 400;
 }
 
 .btn{
@@ -47,15 +57,11 @@ nav ul a{
     padding: 2vh;
     margin: 0 4vh;
     cursor: pointer;
+    background-color: white;
     border: 1px solid white;
 }
 
 
-/*.btn a{
-    color: white;
-    background-color: #1240B2;
-    padding: 1vh;
-    border: 1px solid black;
-    border-radius: 1vh;
-    text-decoration: none;
-} */
+.btn a{
+    color: #2874F0;
+}
