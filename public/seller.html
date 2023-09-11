@@ -4,24 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller</title>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <form>
-        <div class="inputs">
-            <label for="item-image">Add the image of the item:</label><br>
-            <input type="file" name="item-image" id="item-image">
+    <header>
+        <div class="mylogo">
+            <div class="logo_img">
+                <img src="assets/images/logo.png" alt="logo">
+            </div>
+            <div class="title"><p>Seller<sup>AntiqueExchange</sup></p></div>
         </div>
-        <div class="inputs">
-            <label for="item-price">Enter the price of the item:</label><br>
-            <input type="number" id="item-price" name="item-price">
+        <nav>
+            <ul>
+                <li><a href="#">About us</a></li>
+                <li><a href="#">Pricing</a></li>
+                <li><a href="#">Categories</a></li>
+                <li><a href="#">FAQs</a></li>
+                <li>
+                    <div class="btn"><a href="/login">Login</a></div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <section>
+        <div class="container">
+            <form>
+                <div class="inputs">
+                    <label for="item-image">Add the image of the item:</label><br>
+                    <input type="file" name="item-image" id="item-image" accept="image/*">
+                </div>
+                <div class="inputs">
+                    <label for="item-price">Enter the price of the item:</label><br>
+                    <input type="number" id="item-price" name="item-price">
+                </div>
+                <div class="inputs">
+                    <label for="item-desc">Enter Description about the item:</label><br>
+                    <textarea name="Description" id="item-desc" cols="30" rows="10"></textarea>
+                </div>
+                <div class="input_btn">
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
         </div>
-        <div class="inputs">
-            <label for="item-desc">Enter Description about the item:</label><br>
-            <textarea name="Description" id="item-desc" cols="30" rows="10"></textarea>
-        </div>
-        <div class="input_btn">
-            <button type="submit">Submit</button>
-        </div>
-    </form>
+    </section>
 </body>
 </html>
