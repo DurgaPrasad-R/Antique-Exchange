@@ -65,7 +65,7 @@ app.post('/signup', async (req, res) => {
 
   if (!existingUser.empty) {
     // User already exists, redirect to the login page or send a message
-    res.redirect('/login') // You can change this to your login route
+    res.send('<script>alert("User with this email already exists. Please login."); window.location.href = "/login";</script>');
   } else {
     // User is not registered, proceed with the signup
     await db.collection('First').add({
@@ -99,7 +99,7 @@ app.post('/login', async (req, res) => {
     res.send('<script>alert("Login successful."); window.location.href = "/";</script>')
   } else {
     // User not found, you can send an alert or error message
-    res.send('<script>alert("Invalid email or password. Please try again."); window.location.href = "/login";</script>');
+    res.send('<script>alert("Invalid email or password. Please try again.Try Signing up?"); window.location.href = "/login";</script>');
   }
 })
 
