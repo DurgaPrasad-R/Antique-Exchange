@@ -55,34 +55,55 @@ app.get('/seller', (req,res) => {
 })
 
 // Endpoints for API
-app.post('/signup',async (req,res)=>{
-  await db.collection('First').add({
-    Name: req.body.Name,
-    Email: req.body.Email,
-    Password: req.body.Password
-  }).then(()=>{
-    res.send("Signup Successful")
-})
+app.post('/signup', async (req, res) => {
+  const email = req.body.Email;
+
+  // Check if the user with the provided email already exists
+  const existingUser = await db.collection('First')
+    .where('Email', '==', email)
+    .get();
+
+  if (!existingUser.empty) {
+    // User already exists, redirect to the login page or send a message
+    res.redirect('/login') // You can change this to your login route
+  } else {
+    // User is not registered, proceed with the signup
+    await db.collection('First').add({
+      Name: req.body.Name,
+      Email: email, // Use the email from the request
+      Password: req.body.Password
+    }).then(() => {
+      // Send a success message and then redirect to the login page
+      res.send('<script>alert("Signup Successful. Please login."); window.location.href = "/login";</script>');
+    })
+  }
 })
 
-app.post('/login',async (req,res) =>{
+
+
+
+app.post('/login', async (req, res) => {
   const querySnapShot = await db.collection('First')
-  .where("Email","==",req.body.Email)
-  .where("Password","==",req.body.Password)
-  .get()
+    .where("Email", "==", req.body.Email)
+    .where("Password", "==", req.body.Password)
+    .get()
 
-  if (!querySnapShot.empty){
+  if (!querySnapShot.empty) {
     const doc = querySnapShot.docs[0]
     const userData = {
-      Username:doc.get("Name"),
-      Useremail:doc.get("Email")
+      Username: doc.get("Name"),
+      Useremail: doc.get("Email")
     }
-    req.session.userData = userData
-    // res.redirect()
-    res.send("Success")
-  } 
+    req.session.userData = userData;
+    // Send a success alert message and then redirect or perform any other actions
+    res.send('<script>alert("Login successful."); window.location.href = "/";</script>')
+  } else {
+    // User not found, you can send an alert or error message
+    res.send('<script>alert("Invalid email or password. Please try again."); window.location.href = "/login";</script>');
+  }
 })
 
+// TODO if and only if user logs in
 app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
   const userEmail = req.session.userData ? req.session.userData.Useremail : null;
 
@@ -95,41 +116,41 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
 
       if (!querySnapshot.empty) {
         const userDoc = querySnapshot.docs[0];
-        
-        // Get the user's document reference
-        const userDocRef = userDoc.ref;
+
+        // Create a reference to the "sellerItems" subcollection
+        const sellerItemsCollection = userDoc.ref.collection('sellerItems');
 
         // Access the uploaded image file from req.file
-        const imageFile = req.file
-        const fileSizeLimit = 1024*1024
+        const imageFile = req.file;
+        const fileSizeLimit = 1024 * 1024;
         if (!imageFile) {
-          return res.status(400).send('No file uploaded.')
+          return res.status(400).send('No file uploaded.');
         }
 
-        if (imageFile.size > fileSizeLimit){
+        if (imageFile.size > fileSizeLimit) {
           return res.status(400).send('File size exceeds the 1MB limit.');
         }
 
         // Get other data from the form submission
-        const Price = req.body['item-price']
-        const Category = req.body['item-cat']
+        const Price = req.body['item-price'];
+        const Category = req.body['item-cat'];
         const Desc = req.body.Description;
 
-        // Update the user's document with the new seller data
-        await userDocRef.update({
+        // Create a new seller item document within the subcollection
+        await sellerItemsCollection.add({
           SellerItemImage: imageFile.buffer.toString('base64'), // Store the image as a base64-encoded string
           SellerItemPrice: Price,
           SellerCategory: Category,
           SellerItemDescription: Desc
-        })
+        });
 
-        res.send("Seller data added to the user's document successfully");
+        res.send("Seller data added successfully");
       } else {
         // User's document does not exist, handle it accordingly
         res.status(404).send("User not found in the 'First' collection");
       }
     } catch (error) {
-      console.error("Error adding seller data to the user's document:", error);
+      console.error("Error adding seller data:", error);
       res.status(500).send("Internal Server Error");
     }
   } else {
@@ -137,8 +158,6 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
     res.status(401).json({ error: "User email not found in session" });
   }
 });
-
-
 
 app.listen(port, () => {
   console.log(`App listening on port http://localhost:${port}`)
