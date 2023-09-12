@@ -26,16 +26,21 @@
             </ul>
         </nav>
     </header>
-    <section>
-        <div class="container">
-            <form>
-                <div class="inputs">
-                    <label for="item-image">Add the image of the item:</label><br>
-                    <input type="file" name="item-image" id="item-image" accept="image/*">
+    <section class="sec1">
+        <div class="container1">
+            <form action="/seller-data" method="post" enctype="multipart/form-data">
+                <div class="inputs"> 
+                    <label for="item-image">Add the image of the item(Under 1MB):</label><br>
+                    <a href="https://imageresizer.com/image-compressor">Compress Here</a><br>
+                    <input type="file" name="itemImage" id="item-image" accept="image/*">
                 </div>
                 <div class="inputs">
                     <label for="item-price">Enter the price of the item:</label><br>
-                    <input type="number" id="item-price" name="item-price">
+                    <input type="number" id="itemPrice" name="item-price">
+                </div>
+                <div class="inputs">
+                    <label for="item-cat">Enter the Category:</label><br>
+                    <input type="text" id="item-cat" name="item-cat">
                 </div>
                 <div class="inputs">
                     <label for="item-desc">Enter Description about the item:</label><br>

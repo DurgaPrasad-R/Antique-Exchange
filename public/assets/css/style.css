@@ -78,22 +78,28 @@ nav ul li a{
     color: #2874F0;
 }
 
-section{
-    min-height: 1600px;
-    height: calc(100vh-80px);
-}
-
-section .container{
+.sec .container{
     padding-top: 2vh;
     display: flex;
     background-color: lightgray;
     justify-content: space-around;
+    align-items: center;
 }
 
-.card-1 img{
+.sec .card-1 img{
     height: 15vh;
 }
 
-section .content{
+.sec .content{
     text-align: center;
+}
+
+/* seller */
+.sec1 .container1{
+    height: calc(100vh - 80px);
+    padding-top: 2vh;
+    display: flex;
+    background-color: lightgray;
+    justify-content: space-around;
+    align-items: center;
 }
