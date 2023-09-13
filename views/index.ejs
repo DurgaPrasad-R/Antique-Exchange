@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,26 +7,30 @@
     <link rel="shortcut icon" href="assets/images/antique_icon.png" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-
 <body>
     <%- include('header'); -%>
     <%- include('section'); -%>
     <!-- Display sellerItems -->
     <div class="seller-items">
-        <h2>Seller Items</h2>
-        <ul>
-            <% sellerItems.forEach((item) => { %>
-                <li>
-                    <!-- Display item details, you can modify this as needed -->
-                    <img src="<%= item.SellerItemImage %>" alt="Item Image">
-                    <h3><%= item.SellerItemPrice %></h3>
-                    <p><%= item.SellerCategory %></p>
-                    <p><%= item.SellerItemDescription %></p>
-                </li>
-            <% }); %>
-        </ul>
+        <!-- Check if sellerItems object is not empty before rendering the section -->
+        <% if (typeof sellerItems !== 'undefined' && Object.keys(sellerItems).length > 0) { %>
+            <h2>Seller Items</h2>
+            <% for (const category in sellerItems) { %>
+                <h3><%= category %></h3>
+                <ul class="seller-items-list">
+                    <% sellerItems[category].forEach((item) => { %>
+                        <li class="seller-items">
+                            <!-- Display item details, you can modify this as needed -->
+                            <img class="seller-item-image" src="<%= item.SellerItemImage %>" alt="Item Image">
+                            <h3 class="seller-item-price"><%= item.SellerItemPrice %></h3>
+                            <p class="seller-item-category"><%= item.SellerCategory %></p>
+                            <p class="seller-item-description"><%= item.SellerItemDescription %></p>
+                        </li>
+                    <% }); %>
+                </ul>
+            <% } %>
+        <% } %>
     </div>
     <footer></footer>
 </body>
-
 </html>

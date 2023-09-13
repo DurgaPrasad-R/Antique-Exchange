@@ -94,6 +94,96 @@ nav ul li a{
     text-align: center;
 }
 
+/* Define styles for the seller-items section */
+/* Style the seller-items section */
+.seller-items {
+    margin-top: 20px;
+    margin-right: 20px;
+    padding: 10px;
+}
+
+/* Define styles for the seller-items heading */
+.seller-items-heading {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+/* Define styles for the seller-items list */
+.seller-items-list {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto; 
+}
+
+/* Define styles for each seller item */
+.seller-item {
+    border: 1px solid black;
+    padding: 10px;
+    margin-right: 10px;
+    background-color: #f9f9f9;
+    width: 200px;
+}
+
+/* Define styles for the seller item image */
+.seller-item-image {
+    width: 200px;
+    /* height: 300px; */
+}
+
+/* Define styles for the seller item price */
+.seller-item-price {
+    text-align: center;
+    font-size: 18px;
+    color: #007BFF;
+}
+
+/* Define styles for the seller item category */
+.seller-item-category {
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+}
+
+/* Define styles for the seller item description */
+.seller-item-description {
+    text-align: center;
+    font-size: 14px;
+    color:#666;
+    width: 100px;
+    height: 30px;
+    overflow: scroll;
+    margin: 0 auto;
+}
+
+/* Style the item image */
+.seller-item img {
+    /* max-width: 100%; */
+    width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+/* Style the item price */
+.seller-item h3 {
+    font-size: 18px;
+    color: #007bff; /* Blue color for price */
+}
+
+/* Style the item description */
+.seller-item p {
+    font-size: 14px;
+    color: #333;
+}
+
+/* Add spacing at the bottom of the seller item section */
+.seller-items {
+    margin-bottom: 20px;
+}
+
 /* seller */
 .sec1 .container1{
     height: calc(100vh - 80px);

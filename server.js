@@ -38,9 +38,18 @@ app.use(session({
 }));
 
 // End points to serve the HTML files
-app.get('/', (req, res) => {
-  res.render('index', {});
-})
+app.get('/', async (req, res) => {
+  try {
+    // Call the fetchSellerItems function to fetch seller items
+    const sellerItems = await fetchSellerItems();
+
+    // Render the index.ejs template and pass the sellerItems data as a variable
+    res.render('index', { sellerItems });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.get('/login', (req, res) => {
   res.sendFile(__dirname + '/public/login.html')
@@ -159,11 +168,11 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
   }
 });
 
-app.get('/api/getRandomSellerItems', async (req, res) => {
+const fetchSellerItems = async () => {
   try {
-    // Query Firestore for a random selection of seller items (without any category filter)
+    // Query Firestore for seller items and store them in the sellerItems array
     const allUsersSnapshot = await db.collection('First').get();
-    const sellerItems = [];
+    const sellerItems = {};
 
     // Create an array to store promises for subcollection queries
     const subcollectionQueries = [];
@@ -173,7 +182,19 @@ app.get('/api/getRandomSellerItems', async (req, res) => {
       // Query the "sellerItems" subcollection for the current user
       const sellerItemsQuery = userDoc.ref.collection('sellerItems')
         .limit(6) // Adjust the limit to your desired number of random items per user
-        .get();
+        .get()
+        .then((snapshot) => {
+          const items = [];
+          snapshot.forEach((itemDoc) => {
+            const itemData = itemDoc.data();
+            // Convert the Base64 image data to an image URL for JPG images
+            const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage; // Use 'image/jpeg' for JPG images
+            // Add the image URL to the item data
+            itemData.SellerItemImage = imageDataURL;
+            items.push(itemData);
+          });
+          return items;
+        });
 
       // Add the subcollection query promise to the array
       subcollectionQueries.push(sellerItemsQuery);
@@ -182,30 +203,27 @@ app.get('/api/getRandomSellerItems', async (req, res) => {
     // Wait for all subcollection queries to complete
     const subcollectionResults = await Promise.all(subcollectionQueries);
 
-    // Iterate through the results and add items to the sellerItems array
-    subcollectionResults.forEach((sellerItemsSnapshot) => {
-      sellerItemsSnapshot.forEach((itemDoc) => {
-        const itemData = itemDoc.data();
-        // Convert the Base64 image data to an image URL for JPG images
-        const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage; // Use 'image/jpeg' for JPG images
-        // Add the image URL to the item data
-        itemData.SellerItemImage = imageDataURL;
-        sellerItems.push(itemData);
+    // Iterate through the results and organize items by category
+    subcollectionResults.forEach((items) => {
+      items.forEach((item) => {
+        const category = item.SellerCategory;
+        if (!sellerItems[category]) {
+          sellerItems[category] = [];
+        }
+        sellerItems[category].push(item);
       });
     });
 
     // Log the fetched items
     console.log('Fetched Seller Items:', sellerItems);
-    // Render the index.ejs template and pass the sellerItems data as a variable
-    res.render('index', { sellerItems });
 
-    // Return the random seller items with image URLs as JSON response
-    // res.json(sellerItems);
+    return sellerItems;
   } catch (error) {
     console.error('Error fetching random seller items:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    throw error;
   }
-});
+};
+
 
 app.listen(port, () => {
   console.log(`App listening on port http://localhost:${port}`)
