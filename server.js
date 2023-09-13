@@ -141,6 +141,7 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
         }
 
         // Get other data from the form submission
+        const Name = req.body['item-name'];
         const Price = req.body['item-price'];
         const Category = req.body['item-cat'];
         const Desc = req.body.Description;
@@ -148,6 +149,7 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
         // Create a new seller item document within the subcollection
         await sellerItemsCollection.add({
           SellerItemImage: imageFile.buffer.toString('base64'), // Store the image as a base64-encoded string
+          SellerItemName: Name,
           SellerItemPrice: Price,
           SellerCategory: Category,
           SellerItemDescription: Desc
@@ -215,7 +217,7 @@ const fetchSellerItems = async () => {
     });
 
     // Log the fetched items
-    console.log('Fetched Seller Items:', sellerItems);
+    // console.log('Fetched Seller Items:', sellerItems);
 
     return sellerItems;
   } catch (error) {
@@ -233,6 +235,7 @@ app.get('/category/:categoryName', async (req, res) => {
 
     // Render a new template (e.g., category.ejs) to display the category-specific items
     // Pass the categoryItems data as a variable to your template
+    console.log(categoryItems)
     res.render('category', { categoryItems });
   } catch (error) {
     console.error('Error:', error);
@@ -243,21 +246,35 @@ app.get('/category/:categoryName', async (req, res) => {
 const fetchCategoryItems = async (category) => {
   try {
     // Query Firestore for all items in the specified category
-    const categoryItemsSnapshot = await db.collection('First')
-      .where('SellerCategory', '==', category)
-      .get();
+    console.log('Fetching items for category:', category);
+    const categoryItemsSnapshot = await db.collection('First').get();
 
     const categoryItems = [];
+    const categorySubItems = [];
 
-    categoryItemsSnapshot.forEach((itemDoc) => {
-      const itemData = itemDoc.data();
-      // Convert the Base64 image data to an image URL for JPG images
-      const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage; // Use 'image/jpeg' for JPG images
-      // Add the image URL to the item data
-      itemData.SellerItemImage = imageDataURL;
-      categoryItems.push(itemData);
+
+    categoryItemsSnapshot.forEach(async (userDoc) => {
+      const subcollectionRef = userDoc.ref.collection('sellerItems');
+
+      // Query the subcollection for items in the specified category
+      const categoryItemsQuery = subcollectionRef.where('SellerCategory', '==', category).get();  
+
+      categorySubItems.push(categoryItemsQuery)
     });
 
+    const subCategoryQueries = await Promise.all(categorySubItems)
+
+    subCategoryQueries.forEach((categorySnapShot)=>{
+      categorySnapShot.forEach((itemDoc) => {
+        const itemData = itemDoc.data();
+        // Convert the Base64 image data to an image URL for JPG images
+        const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage; // Use 'image/jpeg' for JPG images
+        // Add the image URL to the item data
+        itemData.SellerItemImage = imageDataURL;
+        categoryItems.push(itemData)
+      })
+    })
+    console.log(categoryItems)
     return categoryItems;
   } catch (error) {
     console.error('Error fetching category items:', error);

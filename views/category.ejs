@@ -3,104 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category</title>
-    <link rel="shortcut icon" href="/images/antique_icon.png" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,400;10..48,800&display=swap" rel="stylesheet">
+    <title>category</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            text-decoration: none;
-            box-sizing: border-box;
+        .category-items-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Create 4 columns */
+            gap: 20px; /* Adjust the gap between items as needed */
         }
 
-        body{
-            font-family: 'Bricolage Grotesque', sans-serif;
+        .category-item {
+            text-align: center; /* Center the content within each item */
         }
 
-        header{
-            display: flex;
-            justify-content: space-around;
-            background-color: #2874F0;
-            position: sticky;
-            top: 0;
-            height: 80px;
-            font-weight: 600;
-            color: white;
-        }
-
-        .mylogo{
-            padding: 2vh;
-            display: flex;
-            justify-content: center;
-        }
-
-        .mylogo .title{
-            font-size: x-large;
-            display: flex;
-            align-items: center;
-        }
-
-        .logo_img{
-            display: flex;
-            justify-content: center;
-        }
-
-        nav ul{
-            list-style: none;
-            display: flex;
-            align-items: center;
-        }
-
-        nav ul li{
-            padding: 2vh;
-            margin-left: 3vh;
-        }
-
-        nav ul li a{
-            color: white;
-            font-weight: 400;
-        }
-
-        .cart-item{
-            display: flex;
-            align-items: center;
-        }
-
-        .btn{
-            display: inline-block;
-            width: 5vmax;
-            padding: 2vh;
-            margin: 0 4vh;
-            cursor: pointer;
-            background-color: white;
-            border: 1px solid white;
-            border-radius: 4px;
-            text-align: center;
-        }
-
-        .btn a{
-            color: #2874F0;
+        /* Add any additional styling for images, price, and description here */
+        .category-item-image {
+            max-width: 100%; /* Ensure images don't exceed their container width */
         }
     </style>
 </head>
 <body>
     <%- include('header'); -%>
-
     <!-- Display categoryItems -->
     <div class="category-items">
         <!-- Check if categoryItems object is not empty before rendering the section -->
         <% if (typeof categoryItems !== 'undefined' && categoryItems.length > 0) { %>
-            <h2><%= categoryItems[0].SellerCategory %></h2>
+            <!-- <h2><%= categoryItems[0].SellerCategory %></h2> -->
             <ul class="category-items-list">
                 <% categoryItems.forEach((item) => { %>
                     <li class="category-item">
                         <!-- Display item details, you can modify this as needed -->
-                        <img class="category-item-image" src="<%= item.SellerItemImage %>" alt="Item Image">
+                        <div class="containerImage"><img class="category-item-image" src="<%= item.SellerItemImage %>" alt="Item Image"></div>
+                        <h3 class="category-item-name"><%= item.SellerItemName %></h3>
                         <h3 class="category-item-price"><%= item.SellerItemPrice %></h3>
-                        <p class="category-item-description"><%= item.SellerItemDescription %></p>
+                        <p class="category-item-Description"><%= item.SellerItemDescription %></p>
                     </li>
                 <% }); %>
             </ul>

@@ -32,15 +32,19 @@
                 <div class="inputs"> 
                     <label for="item-image">Add the image of the item(Under 1MB):</label><br>
                     <a href="https://imagecompressor.11zon.com/en/image-compressor/compress-image-to-1mb.php">Compress Here</a><br>
-                    <input type="file" name="itemImage" id="item-image" accept="image/*">
+                    <input type="file" name="itemImage" id="item-image" accept="image/*" required>
+                </div>
+                <div class="inputs">
+                    <label for="item-name">Enter the name of the item:</label><br>
+                    <input type="text" id="itemName" name="item-name" required>
                 </div>
                 <div class="inputs">
                     <label for="item-price">Enter the price of the item:</label><br>
-                    <input type="number" id="itemPrice" name="item-price">
+                    <input type="number" id="itemPrice" name="item-price" required>
                 </div>
                 <div class="inputs">
                     <label for="item-cat">Enter the Category:</label><br>
-                    <input type="text" id="item-cat" name="item-cat">
+                    <input type="text" id="item-cat" name="item-cat" required>
                 </div>
                 <div class="inputs">
                     <label for="item-desc">Enter Description about the item:</label><br>

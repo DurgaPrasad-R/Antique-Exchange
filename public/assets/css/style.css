@@ -137,7 +137,7 @@ nav ul li a{
 }
 
 /* Define styles for the seller item price */
-.seller-item-price {
+.seller-item-price, .seller-item-name {
     text-align: center;
     font-size: 18px;
     color: #007BFF;
