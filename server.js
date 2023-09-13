@@ -224,6 +224,48 @@ const fetchSellerItems = async () => {
   }
 };
 
+app.get('/category/:categoryName', async (req, res) => {
+  try {
+    const categoryName = req.params.categoryName;
+
+    // Call a function to fetch all items related to the specified category
+    const categoryItems = await fetchCategoryItems(categoryName);
+
+    // Render a new template (e.g., category.ejs) to display the category-specific items
+    // Pass the categoryItems data as a variable to your template
+    res.render('category', { categoryItems });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+const fetchCategoryItems = async (category) => {
+  try {
+    // Query Firestore for all items in the specified category
+    const categoryItemsSnapshot = await db.collection('First')
+      .where('SellerCategory', '==', category)
+      .get();
+
+    const categoryItems = [];
+
+    categoryItemsSnapshot.forEach((itemDoc) => {
+      const itemData = itemDoc.data();
+      // Convert the Base64 image data to an image URL for JPG images
+      const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage; // Use 'image/jpeg' for JPG images
+      // Add the image URL to the item data
+      itemData.SellerItemImage = imageDataURL;
+      categoryItems.push(itemData);
+    });
+
+    return categoryItems;
+  } catch (error) {
+    console.error('Error fetching category items:', error);
+    throw error;
+  }
+};
+
+
 
 app.listen(port, () => {
   console.log(`App listening on port http://localhost:${port}`)

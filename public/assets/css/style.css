@@ -16,10 +16,8 @@ header{
     background-color: #2874F0;
     position: sticky;
     top: 0;
-    width: 100vw;
     height: 80px;
     font-weight: 600;
-    padding: 1vh;
     color: white;
 }
 
@@ -97,8 +95,7 @@ nav ul li a{
 /* Define styles for the seller-items section */
 /* Style the seller-items section */
 .seller-items {
-    margin-top: 20px;
-    margin-right: 20px;
+    margin: 0 20px;
     padding: 10px;
 }
 
@@ -114,7 +111,14 @@ nav ul li a{
     padding: 0;
     display: flex;
     flex-wrap: nowrap;
-    overflow-x: auto; 
+    overflow-x: auto;
+    background-color: lightgray;
+}
+
+.sellerimage{
+    height: 300px;
+    display: flex;
+    align-items: center;
 }
 
 /* Define styles for each seller item */
@@ -183,6 +187,31 @@ nav ul li a{
 .seller-items {
     margin-bottom: 20px;
 }
+
+/* Style the "View More" button */
+
+.vmbtn {
+    display: flex;
+    align-items: center;
+}
+
+.view-more-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    height: 50px;
+    width: auto;
+    margin-top: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.view-more-button:hover {
+    background-color: #0056b3;
+}
+
 
 /* seller */
 .sec1 .container1{

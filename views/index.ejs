@@ -14,19 +14,24 @@
     <div class="seller-items">
         <!-- Check if sellerItems object is not empty before rendering the section -->
         <% if (typeof sellerItems !== 'undefined' && Object.keys(sellerItems).length > 0) { %>
-            <h2>Seller Items</h2>
+            <h2>New Arrivals</h2>
             <% for (const category in sellerItems) { %>
                 <h3><%= category %></h3>
                 <ul class="seller-items-list">
-                    <% sellerItems[category].forEach((item) => { %>
+                    
+                    <% const categoryItems = sellerItems[category]; %>
+                    <% for (let i = 0; i < Math.min(categoryItems.length,5); i++) { %>
                         <li class="seller-items">
                             <!-- Display item details, you can modify this as needed -->
-                            <img class="seller-item-image" src="<%= item.SellerItemImage %>" alt="Item Image">
-                            <h3 class="seller-item-price"><%= item.SellerItemPrice %></h3>
-                            <p class="seller-item-category"><%= item.SellerCategory %></p>
-                            <p class="seller-item-description"><%= item.SellerItemDescription %></p>
+                            <div class="sellerimage"><img class="seller-item-image" src="<%= categoryItems[i].SellerItemImage %>" alt="Item Image"></div>
+                            <h3 class="seller-item-price"><%= categoryItems[i].SellerItemPrice %></h3>
+                            <p class="seller-item-category"><%= categoryItems[i].SellerCategory %></p>
                         </li>
-                    <% }); %>
+                        <!-- Add a "View More" button at the end of each category -->
+                        <% if (i === Math.min(categoryItems.length,4)) { %>
+                            <div class="vmbtn"><a class="view-more-button" href="/category/<%= category %>">View More</a></div>
+                        <% } %>
+                    <% } %>
                 </ul>
             <% } %>
         <% } %>
