@@ -12,6 +12,21 @@
 <body>
     <%- include('header'); -%>
     <%- include('section'); -%>
+    <!-- Display sellerItems -->
+    <div class="seller-items">
+        <h2>Seller Items</h2>
+        <ul>
+            <% sellerItems.forEach((item) => { %>
+                <li>
+                    <!-- Display item details, you can modify this as needed -->
+                    <img src="<%= item.SellerItemImage %>" alt="Item Image">
+                    <h3><%= item.SellerItemPrice %></h3>
+                    <p><%= item.SellerCategory %></p>
+                    <p><%= item.SellerItemDescription %></p>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
     <footer></footer>
 </body>
 
