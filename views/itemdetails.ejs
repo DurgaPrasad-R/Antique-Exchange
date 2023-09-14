@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details</title>
+    <link rel="shortcut icon" href="assets/images/antique_icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <%- include('header'); -%>
+    <!-- Display item details -->
+    <div class="item-details">
+        <!-- Check if itemDetails object is not empty before rendering the section -->
+        <% if (typeof itemDetails !== 'undefined') { %>
+            <div class="item-details-content">
+                <div class="itemDetailImage">
+                    <div class="item-details-image">
+                        <img src="<%= itemDetails.SellerItemImage %>" alt="Item Image">
+                    </div>
+                    <div class="itemContent">
+                        <h2><%= itemDetails.SellerItemName %></h2>
+                        <h3>Price: ₹<%= itemDetails.SellerItemPrice %></h3>
+                        <p>Description: <%= itemDetails.SellerItemDescription %></p>
+                    </div>
+                </div>
+                <!-- Add any other item details you want to display here -->
+            </div>
+        <% } else { %>
+            <p>Item details not found.</p>
+        <% } %>
+    </div>
+
+    <footer></footer>
+</body>
+</html>

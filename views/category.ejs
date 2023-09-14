@@ -33,9 +33,13 @@
                 <% categoryItems.forEach((item) => { %>
                     <li class="category-item">
                         <!-- Display item details, you can modify this as needed -->
-                        <div class="containerImage"><img class="category-item-image" src="<%= item.SellerItemImage %>" alt="Item Image"></div>
+                        <div class="containerImage">
+                            <a href="/item/<%= item.SellerCategory %>/<%= item.SellerItemName %>">
+                                <img class="category-item-image" src="<%= item.SellerItemImage %>" alt="Item Image">
+                            </a>
+                        </div>
                         <h3 class="category-item-name"><%= item.SellerItemName %></h3>
-                        <h3 class="category-item-price"><%= item.SellerItemPrice %></h3>
+                        <h3 class="category-item-price">₹<%= item.SellerItemPrice %></h3>
                         <p class="category-item-Description"><%= item.SellerItemDescription %></p>
                     </li>
                 <% }); %>

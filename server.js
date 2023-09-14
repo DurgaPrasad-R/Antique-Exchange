@@ -1,8 +1,14 @@
-const express = require('express')
-const app = express()
-const session = require('express-session')
-app.use(express.json())
-app.use(express.urlencoded())
+const express = require('express');
+const app = express();
+const session = require('express-session');
+app.use(express.json());
+app.use(express.urlencoded());
+
+// Set the view engine to EJS
+app.set('view engine', 'ejs');
+
+// To use HTML files
+app.use(express.static("public"));
 
 const multer = require('multer');
 
@@ -10,26 +16,21 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-const ejs = require('ejs')
+const ejs = require('ejs');
 ejs.clearCache();
+
 // Necessary libraries and details for Firebase
 const admin = require("firebase-admin");
 const { getFirestore } = require('firebase-admin/firestore');
 var serviceAccount = require("./Key.json");
-const port = 3000
+const port = 3000;
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
-// database
+// Database
 const db = getFirestore();
-
-// Set the view engine to EJS
-app.set('view engine', 'ejs');
-
-// To use html files
-app.use(express.static("public"))
 
 app.use(session({
   secret: 'qwertypj',
@@ -37,7 +38,7 @@ app.use(session({
   saveUninitialized: true,
 }));
 
-// End points to serve the HTML files
+// Endpoints to serve the HTML files
 app.get('/', async (req, res) => {
   try {
     // Call the fetchSellerItems function to fetch seller items
@@ -52,16 +53,16 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  res.sendFile(__dirname + '/public/login.html')
-})
+  res.sendFile(__dirname + '/public/login.html');
+});
 
 app.get('/signup', (req, res) => {
-  res.sendFile(__dirname + '/public/signup.html')
-})
+  res.sendFile(__dirname + '/public/signup.html');
+});
 
 app.get('/seller', (req, res) => {
-  res.sendFile(__dirname + '/public/seller.html')
-})
+  res.sendFile(__dirname + '/public/seller.html');
+});
 
 // Endpoints for API
 app.post('/signup', async (req, res) => {
@@ -84,33 +85,30 @@ app.post('/signup', async (req, res) => {
     }).then(() => {
       // Send a success message and then redirect to the login page
       res.send('<script>alert("Signup Successful. Please login."); window.location.href = "/login";</script>');
-    })
+    });
   }
-})
-
-
-
+});
 
 app.post('/login', async (req, res) => {
   const querySnapShot = await db.collection('First')
     .where("Email", "==", req.body.Email)
     .where("Password", "==", req.body.Password)
-    .get()
+    .get();
 
   if (!querySnapShot.empty) {
-    const doc = querySnapShot.docs[0]
+    const doc = querySnapShot.docs[0];
     const userData = {
       Username: doc.get("Name"),
       Useremail: doc.get("Email")
-    }
+    };
     req.session.userData = userData;
     // Send a success alert message and then redirect or perform any other actions
-    res.send('<script>alert("Login successful."); window.location.href = "/";</script>')
+    res.send('<script>alert("Login successful."); window.location.href = "/";</script>');
   } else {
     // User not found, you can send an alert or error message
     res.send('<script>alert("Invalid email or password. Please try again.Try Signing up?"); window.location.href = "/login";</script>');
   }
-})
+});
 
 // TODO if and only if user logs in
 app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
@@ -155,10 +153,10 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
           SellerItemDescription: Desc
         });
 
-        res.send("Seller data added successfully");
+        res.send('<script>alert("Seller data added successfully."); window.location.href = "/seller";</script>');
       } else {
         // User's document does not exist, handle it accordingly
-        res.status(404).send("User not found in the 'First' collection");
+        res.send('<script>alert("User does not exist: Please Signup."); window.location.href = "/signup";</script>');
       }
     } catch (error) {
       console.error("Error adding seller data:", error);
@@ -166,7 +164,7 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
     }
   } else {
     // If user data doesn't exist in the session, handle it accordingly
-    res.status(401).json({ error: "User email not found in session" });
+    res.send('<script>alert("Please login. Before you add the item to sell"); window.location.href = "/login";</script>');
   }
 });
 
@@ -216,9 +214,6 @@ const fetchSellerItems = async () => {
       });
     });
 
-    // Log the fetched items
-    // console.log('Fetched Seller Items:', sellerItems);
-
     return sellerItems;
   } catch (error) {
     console.error('Error fetching random seller items:', error);
@@ -235,7 +230,6 @@ app.get('/category/:categoryName', async (req, res) => {
 
     // Render a new template (e.g., category.ejs) to display the category-specific items
     // Pass the categoryItems data as a variable to your template
-    console.log(categoryItems)
     res.render('category', { categoryItems });
   } catch (error) {
     console.error('Error:', error);
@@ -246,35 +240,33 @@ app.get('/category/:categoryName', async (req, res) => {
 const fetchCategoryItems = async (category) => {
   try {
     // Query Firestore for all items in the specified category
-    console.log('Fetching items for category:', category);
     const categoryItemsSnapshot = await db.collection('First').get();
 
     const categoryItems = [];
     const categorySubItems = [];
 
-
     categoryItemsSnapshot.forEach(async (userDoc) => {
       const subcollectionRef = userDoc.ref.collection('sellerItems');
 
       // Query the subcollection for items in the specified category
-      const categoryItemsQuery = subcollectionRef.where('SellerCategory', '==', category).get();  
+      const categoryItemsQuery = subcollectionRef.where('SellerCategory', '==', category).get();
 
-      categorySubItems.push(categoryItemsQuery)
+      categorySubItems.push(categoryItemsQuery);
     });
 
-    const subCategoryQueries = await Promise.all(categorySubItems)
+    const subCategoryQueries = await Promise.all(categorySubItems);
 
-    subCategoryQueries.forEach((categorySnapShot)=>{
+    subCategoryQueries.forEach((categorySnapShot) => {
       categorySnapShot.forEach((itemDoc) => {
         const itemData = itemDoc.data();
         // Convert the Base64 image data to an image URL for JPG images
         const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage; // Use 'image/jpeg' for JPG images
         // Add the image URL to the item data
         itemData.SellerItemImage = imageDataURL;
-        categoryItems.push(itemData)
-      })
-    })
-    console.log(categoryItems)
+        categoryItems.push(itemData);
+      });
+    });
+
     return categoryItems;
   } catch (error) {
     console.error('Error fetching category items:', error);
@@ -282,8 +274,65 @@ const fetchCategoryItems = async (category) => {
   }
 };
 
+app.get('/item/:categoryName/:itemName', async (req, res) => {
+  try {
+    const categoryName = req.params.categoryName;
+    const itemName = req.params.itemName;
 
+    // Call the function to fetch item details by name in the specified category
+    const itemDetails = await fetchItemDetailsByNameInCategory(categoryName, itemName);
+
+    // Render a new template (e.g., item-details.ejs) to display the item details
+    // Pass the itemDetails data as a variable to your template
+    res.render('itemdetails', { itemDetails });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+const fetchItemDetailsByNameInCategory = async (category, itemName) => {
+  try {
+    // Query Firestore for the item details based on the item's name and category
+    const itemQuerySnapshot = await db.collection('First').get();
+
+    const itemDetails = [];
+    const itemSubDetails = [];
+
+    itemQuerySnapshot.forEach(async (userDoc) => {
+      const subcollectionRef = userDoc.ref.collection('sellerItems');
+
+      // Query the subcollection for items in the specified category with the given name
+      const itemQuery = subcollectionRef
+        .where('SellerCategory', '==', category)
+        .where('SellerItemName', '==', itemName)
+        .get();
+
+      itemSubDetails.push(itemQuery);
+    });
+
+    const subItemQueries = await Promise.all(itemSubDetails);
+
+    subItemQueries.forEach((itemSnapShot) => {
+      itemSnapShot.forEach((itemDoc) => {
+        const itemData = itemDoc.data();
+
+        // Convert the Base64 image data to an image URL for JPG images
+        const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage;
+        // Add the image URL to the item details
+        itemData.SellerItemImage = imageDataURL;
+
+        itemDetails.push(itemData);
+      });
+    });
+
+    return itemDetails[0];
+  } catch (error) {
+    console.error('Error fetching item details by name in category:', error);
+    throw error;
+  }
+};
 
 app.listen(port, () => {
-  console.log(`App listening on port http://localhost:${port}`)
-})
+  console.log(`App listening on port http://localhost:${port}`);
+});

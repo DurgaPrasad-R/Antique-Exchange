@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Antique Exchange</title>
     <link rel="shortcut icon" href="assets/images/antique_icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
     <%- include('header'); -%>
@@ -21,16 +21,15 @@
                     
                     <% const categoryItems = sellerItems[category]; %>
                     <% for (let i = 0; i < Math.min(categoryItems.length,5); i++) { %>
-                        <%=console.log(i) %>
                         <li class="seller-items">
                             <!-- Display item details, you can modify this as needed -->
                             <div class="sellerimage"><img class="seller-item-image" src="<%= categoryItems[i].SellerItemImage %>" alt="Item Image"></div>
                             <h3 class="seller-item-name"><%= categoryItems[i].SellerItemName %></h3>
-                            <h3 class="seller-item-price"><%= categoryItems[i].SellerItemPrice %></h3>
+                            <h3 class="seller-item-price">₹<%= categoryItems[i].SellerItemPrice %><span id="randomPrice">₹2500</span></h3>
                             <p class="seller-item-category"><%= categoryItems[i].SellerCategory %></p>
                         </li>
                         <!-- Add a "View More" button at the end of each category -->
-                        <% if (i === Math.min(categoryItems.length,3)) { %>
+                        <% if (i === Math.min(categoryItems.length,4)) { %>
                             <div class="vmbtn"><a class="view-more-button" href="/category/<%= category %>">View More</a></div>
                         <% } %>
                     <% } %>

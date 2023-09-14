@@ -75,6 +75,12 @@ nav ul li a{
 .btn a{
     color: #2874F0;
 }
+  
+#randomPrice {
+    text-decoration: line-through;
+    margin-left: 1rem;
+}
+  
 
 .sec .container{
     padding-top: 2vh;
