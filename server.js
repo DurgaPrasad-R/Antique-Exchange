@@ -1,14 +1,15 @@
 const express = require('express');
 const app = express();
 const session = require('express-session');
+const path = require('path')
 app.use(express.json());
 app.use(express.urlencoded());
 
-// Set the view engine to EJS
-app.set('view engine', 'ejs');
-
 // To use HTML files
 app.use(express.static("public"));
+
+// Set the view engine to EJS
+app.set('view engine', 'ejs');
 
 const multer = require('multer');
 
@@ -43,9 +44,9 @@ app.get('/', async (req, res) => {
   try {
     // Call the fetchSellerItems function to fetch seller items
     const sellerItems = await fetchSellerItems();
-
+    const session = req.session;
     // Render the index.ejs template and pass the sellerItems data as a variable
-    res.render('index', { sellerItems });
+    res.render('index', { sellerItems , session});
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -224,13 +225,14 @@ const fetchSellerItems = async () => {
 app.get('/category/:categoryName', async (req, res) => {
   try {
     const categoryName = req.params.categoryName;
-
+    const session = req.session
     // Call a function to fetch all items related to the specified category
     const categoryItems = await fetchCategoryItems(categoryName);
 
     // Render a new template (e.g., category.ejs) to display the category-specific items
     // Pass the categoryItems data as a variable to your template
-    res.render('category', { categoryItems });
+    // console.log(session.userData)
+    res.render('category', { categoryItems , session});
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -278,13 +280,15 @@ app.get('/item/:categoryName/:itemName', async (req, res) => {
   try {
     const categoryName = req.params.categoryName;
     const itemName = req.params.itemName;
+    const session = req.session
 
     // Call the function to fetch item details by name in the specified category
     const itemDetails = await fetchItemDetailsByNameInCategory(categoryName, itemName);
 
     // Render a new template (e.g., item-details.ejs) to display the item details
     // Pass the itemDetails data as a variable to your template
-    res.render('itemdetails', { itemDetails });
+    console.log(session.userData)
+    res.render('itemdetails', { itemDetails , session});
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -332,6 +336,17 @@ const fetchItemDetailsByNameInCategory = async (category, itemName) => {
     throw error;
   }
 };
+
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error destroying session:', err);
+    } else {
+      // Redirect the user to the login page or any other desired action after logout
+      res.redirect('/login');
+    }
+  });
+});
 
 app.listen(port, () => {
   console.log(`App listening on port http://localhost:${port}`);

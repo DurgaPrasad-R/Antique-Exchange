@@ -1,7 +1,7 @@
 <header>
     <div class="mylogo">
         <div class="logo_img">
-            <img src="../assets/images/logo.png" alt="logo">
+            <img src="/assets/images/logo.png" alt="logo">
         </div>
         <div class="title">AntiqueExchange</div>
     </div>
@@ -13,13 +13,21 @@
             <li>
                 <div class="cart-item">
                     <div id="cart-img">
-                        <img src="../assets/images/cart.png" alt="cart" height="20vmin">
+                        <img src="/assets/images/cart.png" alt="cart" height="20vmin">
                     </div>
                     <a href="#" id="cart-con">Cart</a>
                 </div>
             </li>
             <li>
-                <div class="btn"><a href="/login">Login</a></div>
+                <div class="btn">
+                    <% if (typeof session.userData === 'undefined') { %>
+                    <!-- Display the login button if the user is not logged in -->
+                    <a href="/login">Login</a>
+                  <% } else { %>
+                    <!-- Display user information if the user is logged in -->
+                    <p>Welcome, <%= session.userData.Username %>!</p>
+                    <a href="/logout">Logout</a> <!-- Add a logout link if needed -->
+                  <% } %></div>
             </li>
         </ul>
     </nav>

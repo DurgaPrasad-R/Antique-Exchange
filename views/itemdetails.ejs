@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Item Details</title>
-    <link rel="shortcut icon" href="assets/images/antique_icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
     <%- include('header'); -%>
-    <!-- Display item details -->
     <div class="item-details">
         <!-- Check if itemDetails object is not empty before rendering the section -->
         <% if (typeof itemDetails !== 'undefined') { %>
@@ -30,7 +31,5 @@
             <p>Item details not found.</p>
         <% } %>
     </div>
-
-    <footer></footer>
 </body>
 </html>
