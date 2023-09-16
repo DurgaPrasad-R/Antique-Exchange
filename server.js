@@ -62,7 +62,8 @@ app.get('/signup', (req, res) => {
 });
 
 app.get('/seller', (req, res) => {
-  res.sendFile(__dirname + '/public/seller.html');
+  const session = req.session;
+  res.render('seller',{session});
 });
 
 // Endpoints for API
@@ -147,6 +148,7 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
 
         // Create a new seller item document within the subcollection
         await sellerItemsCollection.add({
+          SellerEmail: userEmail,
           SellerItemImage: imageFile.buffer.toString('base64'), // Store the image as a base64-encoded string
           SellerItemName: Name,
           SellerItemPrice: Price,
@@ -287,7 +289,6 @@ app.get('/item/:categoryName/:itemName', async (req, res) => {
 
     // Render a new template (e.g., item-details.ejs) to display the item details
     // Pass the itemDetails data as a variable to your template
-    console.log(session.userData)
     res.render('itemdetails', { itemDetails , session});
   } catch (error) {
     console.error('Error:', error);
@@ -305,13 +306,11 @@ const fetchItemDetailsByNameInCategory = async (category, itemName) => {
 
     itemQuerySnapshot.forEach(async (userDoc) => {
       const subcollectionRef = userDoc.ref.collection('sellerItems');
-
       // Query the subcollection for items in the specified category with the given name
       const itemQuery = subcollectionRef
         .where('SellerCategory', '==', category)
         .where('SellerItemName', '==', itemName)
         .get();
-
       itemSubDetails.push(itemQuery);
     });
 
@@ -325,7 +324,6 @@ const fetchItemDetailsByNameInCategory = async (category, itemName) => {
         const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage;
         // Add the image URL to the item details
         itemData.SellerItemImage = imageDataURL;
-
         itemDetails.push(itemData);
       });
     });

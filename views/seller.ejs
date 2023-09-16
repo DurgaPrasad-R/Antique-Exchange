@@ -7,26 +7,7 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <header>
-        <div class="mylogo">
-            <div class="logo_img">
-                <img src="assets/images/logo.png" alt="logo">
-            </div>
-            <div class="title"><p>Seller <sup>AntiqueExchange</sup></p></div>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="#">About us</a></li>
-                <li><a href="#">Pricing</a></li>
-                <li><a href="#">Categories</a></li>
-                <li><a href="#">FAQs</a></li>
-                <li>
-                    <div class="btn" id="loginButton">
-                      </div>
-                </li>
-            </ul>
-        </nav>
-    </header>
+    <%- include('header'); -%>
     <section class="sec1">
         <div class="container1">
             <form action="/seller-data" method="post" enctype="multipart/form-data">

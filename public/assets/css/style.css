@@ -236,3 +236,21 @@ background-color: #555;
     justify-content: space-around;
     align-items: center;
 }
+
+.item-details{
+    padding: 1vmin;
+    display: flex;
+}
+
+.item-details-content,.item-details-image img{
+    width: 50vw;
+}
+
+.itemContent{
+    width: 20vw;
+    margin: 0 auto;
+}
+
+.order-form{
+    padding: 1vmin;
+}

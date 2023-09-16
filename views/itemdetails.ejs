@@ -27,6 +27,53 @@
                 </div>
                 <!-- Add any other item details you want to display here -->
             </div>
+            <div class="order-form">
+                <form action="">
+                    <div class="Days">
+                        <label for="ndays">No. of days</label><br>
+                        <input type="number" name="NDays" id="ndays">
+                    </div>
+                    <div class="Fname">
+                        <label for="fname">Full Name (First and Last)</label><br>
+                        <input type="text" name="FullName" id="fname">
+                    </div>
+                    <div class="Mobile">
+                        <label for="mobile">Mobile Number</label><br>
+                        <input type="text" name="Mobile" id="mobile">
+                    </div>
+                    <div class="Pincode">
+                        <label for="pincode">Pincode</label><br>
+                        <input type="number" name="Pincode" id="pincode">
+                    </div>
+                    <div class="flat">
+                        <label for="dno">House No./Flat No.</label><br>
+                        <input type="number" name="Flat" id="dno">
+                    </div>
+                    <div class="area">
+                        <label for="street">Area,Street,Village</label><br>
+                        <input type="text" name="Street" id="street">
+                    </div>
+                    <div class="lmark">
+                        <label for="landmark">Landmark</label><br>
+                        <input type="text" name="Landmark" id="landmark">
+                    </div>
+                    <div class="Place">
+                        <div class="city">
+                            <label for="town">Town/City</label><br>
+                            <input type="text" name="Town/City" id="town">
+                        </div>
+                        <div class="STATE">
+                            <label for="state">State</label><br>
+                            <input type="text" name="State" id="state">
+                        </div>
+                    </div>
+                    <div class="msg">Currently we prefer Cash On Delivery</div>
+                    <div class="buttons">
+                        <button class="addToBag">Add to Bag</button><br>
+                        <button class="placeOrder">Place Order</button>
+                    </div>
+                </form>
+            </div>
         <% } else { %>
             <p>Item details not found.</p>
         <% } %>
