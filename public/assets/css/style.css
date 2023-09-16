@@ -63,8 +63,6 @@ nav ul li a{
     align-items: center;
 }
 
-/* styles.css */
-
 /* Style for the login button */
 .btn {
     background-color: white;
@@ -77,29 +75,29 @@ nav ul li a{
     transition: background-color 0.3s ease; /* Smooth transition for background color */
   }
   
-  /* Style for the logged-in button */
-  .btn-loggedin {
-    background-color: #333;
-    color: white; /* Text color */
-    padding: 10px 20px;
-    text-decoration: none;
-    border: 2px solid #333; /* Border style */
-    border-radius: 5px; /* Rounded corners */
-    display: inline-block;
-    transition: background-color 0.3s ease; /* Smooth transition for background color */
-  }
-  
-  /* Change the background color of the logged-in button on hover */
-  .btn-loggedin:hover {
-    background-color: #555;
-  }  
+/* Style for the logged-in button */
+.btn-loggedin {
+background-color: #333;
+color: white; /* Text color */
+padding: 10px 20px;
+text-decoration: none;
+border: 2px solid #333; /* Border style */
+border-radius: 5px; /* Rounded corners */
+display: inline-block;
+transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+/* Change the background color of the logged-in button on hover */
+.btn-loggedin:hover {
+background-color: #555;
+}  
 
 
 .btn a{
     color: #2874F0;
 }
-  
-#randomPrice {
+
+.randomPrice {
     text-decoration: line-through;
     margin-left: 1rem;
 }
@@ -124,7 +122,7 @@ nav ul li a{
 /* Define styles for the seller-items section */
 /* Style the seller-items section */
 .seller-items {
-    margin: 0 20px;
+    margin: 1vh 1vh;
     padding: 10px;
 }
 
@@ -145,7 +143,6 @@ nav ul li a{
 }
 
 .sellerimage{
-    height: 300px;
     display: flex;
     align-items: center;
 }
@@ -169,7 +166,6 @@ nav ul li a{
 .seller-item-price, .seller-item-name {
     text-align: center;
     font-size: 18px;
-    color: #007BFF;
 }
 
 /* Define styles for the seller item category */
@@ -200,27 +196,17 @@ nav ul li a{
     border-radius: 5px;
 }
 
-/* Style the item price */
-.seller-item h3 {
-    font-size: 18px;
-    color: #007bff; /* Blue color for price */
-}
-
 /* Style the item description */
 .seller-item p {
     font-size: 14px;
     color: #333;
 }
 
-/* Add spacing at the bottom of the seller item section */
-.seller-items {
-    margin-bottom: 20px;
-}
-
 /* Style the "View More" button */
 
 .vmbtn {
     display: flex;
+    justify-content: center;
     align-items: center;
 }
 
@@ -228,11 +214,10 @@ nav ul li a{
     background-color: #007BFF;
     color: white;
     border: none;
+    border-radius: 0.2rem;
     padding: 10px 20px;
     height: 50px;
     width: auto;
-    margin-top: 10px;
-    margin-right: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
