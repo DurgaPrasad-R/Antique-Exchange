@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
-    <%- include('header'); -%>
+    <%- include('header',{globalCategories:globalCategories}); -%>
     <div class="item-details">
         <!-- Check if itemDetails object is not empty before rendering the section -->
         <% if (typeof itemDetails !== 'undefined') { %>

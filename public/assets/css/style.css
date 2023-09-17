@@ -79,6 +79,8 @@ nav ul li a{
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     list-style: none;
     padding: 0;
+    height: 200px;
+    overflow-y: scroll;
 }
 
 .category-menu a{
@@ -234,6 +236,7 @@ background-color: #555;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-right: 1vmax;
 }
 
 .view-more-button {
@@ -242,7 +245,6 @@ background-color: #555;
     border: none;
     border-radius: 0.2rem;
     padding: 10px 20px;
-    height: 50px;
     width: auto;
     cursor: pointer;
     transition: background-color 0.3s ease;

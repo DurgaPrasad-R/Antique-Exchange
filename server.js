@@ -294,7 +294,7 @@ app.get('/item/:categoryName/:itemName', async (req, res) => {
 
     // Render a new template (e.g., item-details.ejs) to display the item details
     // Pass the itemDetails data as a variable to your template
-    res.render('itemdetails', { itemDetails , session});
+    res.render('itemdetails', { itemDetails , session, globalCategories});
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });

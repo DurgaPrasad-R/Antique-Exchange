@@ -9,19 +9,70 @@
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
     <style>
-        .category-items-list {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* Create 4 columns */
-            gap: 20px; /* Adjust the gap between items as needed */
+        .category-items-list{
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 0 5vmin;
+        }
+        /* Style the card container */
+        .card {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 10px;
+        margin: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s;
+        background-color: #fff;
+        width: 200px;
+        height: 300px;
         }
 
-        .category-item {
-            text-align: center; /* Center the content within each item */
+        .containerImage img{
+            width: 100%;
         }
 
-        /* Add any additional styling for images, price, and description here */
-        .category-item-image {
-            max-width: 100%; /* Ensure images don't exceed their container width */
+        /* Style the card when hovered */
+        .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Style the card image */
+        .card-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        }
+
+        /* Style the card details */
+        .card-details {
+        padding: 10px;
+        }
+
+        .card-details a{
+            color: #000;
+        }
+
+        /* Style the card title */
+        .card-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 0;
+        }
+
+        /* Style the card price */
+        .card-price {
+        font-size: 16px;
+        color: #e91e63; /* Customize the color as needed */
+        margin: 0;
+        }
+
+        /* Style the card description */
+        .card-description {
+        font-size: 14px;
+        margin: 0;
         }
     </style>
 </head>
@@ -36,14 +87,20 @@
                 <% categoryItems.forEach((item) => { %>
                     <li class="category-item">
                         <!-- Display item details, you can modify this as needed -->
-                        <div class="containerImage">
-                            <a href="/item/<%= item.SellerCategory %>/<%= item.SellerItemName %>">
-                                <img class="category-item-image" src="<%= item.SellerItemImage %>" alt="Item Image">
-                            </a>
+                        <div class="card">
+                            <div class="containerImage">
+                                <a href="/item/<%= item.SellerCategory %>/<%= item.SellerItemName %>">
+                                    <img class="category-item-image" src="<%= item.SellerItemImage %>" alt="Item Image">
+                                </a>
+                            </div>
+                            <div class="card-details">
+                                <a href="/item/<%= item.SellerCategory %>/<%= item.SellerItemName %>">
+                                    <h3 class="category-item-name"><%= item.SellerItemName %></h3>
+                                    <h3 class="category-item-price">₹<%= item.SellerItemPrice %></h3>
+                                    <p class="category-item-Description"><%= item.SellerItemDescription %></p>
+                                </a>
+                            </div>
                         </div>
-                        <h3 class="category-item-name"><%= item.SellerItemName %></h3>
-                        <h3 class="category-item-price">₹<%= item.SellerItemPrice %></h3>
-                        <p class="category-item-Description"><%= item.SellerItemDescription %></p>
                     </li>
                 <% }); %>
             </ul>
