@@ -40,7 +40,7 @@ app.use(session({
 }));
 
 // Endpoints to serve the HTML files
-app.get('/', async (req, res) => {
+app.get('/dashboard', async (req, res) => {
   try {
     // Call the fetchSellerItems function to fetch seller items
     const sellerItems = await fetchSellerItems();
@@ -105,7 +105,7 @@ app.post('/login', async (req, res) => {
     };
     req.session.userData = userData;
     // Send a success alert message and then redirect or perform any other actions
-    res.send('<script>alert("Login successful."); window.location.href = "/";</script>');
+    res.send('<script>alert("Login successful."); window.location.href = "/dashboard";</script>');
   } else {
     // User not found, you can send an alert or error message
     res.send('<script>alert("Invalid email or password. Please try again.Try Signing up?"); window.location.href = "/login";</script>');
@@ -170,7 +170,6 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
     res.send('<script>alert("Please login. Before you add the item to sell"); window.location.href = "/login";</script>');
   }
 });
-
 const fetchSellerItems = async () => {
   try {
     // Query Firestore for seller items and store them in the sellerItems array

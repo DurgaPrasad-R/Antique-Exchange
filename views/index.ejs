@@ -21,7 +21,6 @@
             <% for (const category in sellerItems) { %>
                 <h3><%= category %></h3>
                 <ul class="seller-items-list">
-                    
                     <% const categoryItems = sellerItems[category]; %>
                     <% for (let i = 0; i < Math.min(categoryItems.length,5); i++) { %>
                         <li class="seller-items">
