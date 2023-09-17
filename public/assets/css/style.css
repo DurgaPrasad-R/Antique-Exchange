@@ -63,6 +63,32 @@ nav ul li a{
     align-items: center;
 }
 
+/* CSS for the dropdown menu */
+.category-dropdown {
+    position: relative;
+}
+
+.category-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    padding: 0;
+}
+
+.category-menu a{
+    color: #2874F0;
+}
+
+.category-dropdown:hover .category-menu {
+    display: block;
+}
+  
 /* Style for the login button */
 .btn {
     background-color: white;

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <%- include('header'); -%>
+    <%- include('header',{globalCategories:globalCategories}); -%>
     <section class="sec1">
         <div class="container1">
             <form action="/seller-data" method="post" enctype="multipart/form-data">

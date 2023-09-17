@@ -46,7 +46,7 @@ app.get('/dashboard', async (req, res) => {
     const sellerItems = await fetchSellerItems();
     const session = req.session;
     // Render the index.ejs template and pass the sellerItems data as a variable
-    res.render('index', { sellerItems , session});
+    res.render('index', { sellerItems , session, globalCategories});
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -63,7 +63,7 @@ app.get('/signup', (req, res) => {
 
 app.get('/seller', (req, res) => {
   const session = req.session;
-  res.render('seller',{session});
+  res.render('seller',{session,globalCategories});
 });
 
 // Endpoints for API
@@ -170,6 +170,8 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
     res.send('<script>alert("Please login. Before you add the item to sell"); window.location.href = "/login";</script>');
   }
 });
+
+const globalCategories = []; // Initialize a global variable to store categories
 const fetchSellerItems = async () => {
   try {
     // Query Firestore for seller items and store them in the sellerItems array
@@ -213,6 +215,10 @@ const fetchSellerItems = async () => {
           sellerItems[category] = [];
         }
         sellerItems[category].push(item);
+        
+        if (!globalCategories.includes(category)) {
+          globalCategories.push(category);
+        }
       });
     });
 
@@ -233,7 +239,7 @@ app.get('/category/:categoryName', async (req, res) => {
     // Render a new template (e.g., category.ejs) to display the category-specific items
     // Pass the categoryItems data as a variable to your template
     // console.log(session.userData)
-    res.render('category', { categoryItems , session});
+    res.render('category', { categoryItems , session, globalCategories});
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
