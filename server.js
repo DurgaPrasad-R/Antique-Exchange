@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
 const session = require('express-session');
-const path = require('path')
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 app.use(express.json());
 app.use(express.urlencoded());
 
@@ -91,6 +92,122 @@ app.post('/signup', async (req, res) => {
   }
 });
 
+// app.post('/signup', async (req, res) => {
+//   const email = req.body.Email;
+
+//   // Check if the user with the provided email already exists
+//   const existingUser = await db.collection('First')
+//     .where('Email', '==', email)
+//     .get();
+
+//   if (!existingUser.empty) {
+//     // User already exists, redirect to the login page or send a message
+//     res.send('<script>alert("User with this email already exists. Please login."); window.location.href = "/login";</script>');
+//   } else {
+//     // User is not registered, proceed with the signup
+
+//     // Generate a random confirmation token using crypto
+//     const confirmationToken = crypto.randomBytes(20).toString('hex');
+
+//     // Add the user data, including isConfirmed set to false
+//     await db.collection('First').add({
+//       Name: req.body.Name,
+//       Email: email,
+//       Password: req.body.Password,
+//       isConfirmed: false, // Set isConfirmed to false for new users
+//       confirmationToken: confirmationToken, // Store the confirmation token in the database
+//     }).then(async (docRef) => {
+//       // Send a confirmation email to the user
+//       const transporter = nodemailer.createTransport({
+//         // Configure your email service (e.g., Gmail, SMTP)
+//         service: 'gmail',
+//         auth: {
+//           user: process.env.EMAIL_USERNAME,
+//           pass: process.env.EMAIL_PASSWORD,
+//         },
+//       });
+
+//       const confirmationLink = `/confirm/${confirmationToken}`;
+//       const mailOptions = {
+//         from: process.env.EMAIL_USERNAME,
+//         to: email,
+//         subject: 'Confirm Your Email Address',
+//         html: `<p>Click the following link to confirm your email address:</p><p><a href="${confirmationLink}">${confirmationLink}</a></p>`,
+//       };
+
+//       // Send the email
+//       await transporter.sendMail(mailOptions, (error, info) => {
+//         if (error) {
+//           console.error('Error sending confirmation email: ', error);
+//         } else {
+//           console.log('Confirmation email sent: ', info.response);
+//         }
+//       });
+
+//       // Send a success message and then redirect to the login page
+//       res.send('<script>alert("Signup Successful. Please check your email for confirmation."); window.location.href = "/login";</script>');
+//     });
+//   }
+// });
+
+
+// app.post('/login', async (req, res) => {
+//   const querySnapShot = await db.collection('First')
+//     .where("Email", "==", req.body.Email)
+//     .where("Password", "==", req.body.Password)
+//     .get();
+
+//   if (!querySnapShot.empty) {
+//     const doc = querySnapShot.docs[0];
+//     const userData = {
+//       Username: doc.get("Name"),
+//       Useremail: doc.get("Email")
+//     };
+//     req.session.userData = userData;
+//     // Send a success alert message and then redirect or perform any other actions
+//     res.send('<script>alert("Login successful."); window.location.href = "/dashboard";</script>');
+//   } else {
+//     // User not found, you can send an alert or error message
+//     res.send('<script>alert("Invalid email or password. Please try again.Try Signing up?"); window.location.href = "/login";</script>');
+//   }
+// });
+
+// TODO if and only if user logs in
+
+// app.post('/login', async (req, res) => {
+//   const email = req.body.Email;
+//   const password = req.body.Password;
+
+//   // Check if the user with the provided email and password exists
+//   const querySnapshot = await db.collection('First')
+//     .where("Email", "==", email)
+//     .where("Password", "==", password)
+//     .get();
+
+//   if (!querySnapshot.empty) {
+//     const doc = querySnapshot.docs[0];
+//     const userData = {
+//       Username: doc.get("Name"),
+//       Useremail: doc.get("Email")
+//     };
+
+//     const isConfirmed = doc.get("isConfirmed");
+    
+//     if (isConfirmed) {
+//       // User is confirmed, proceed with login
+//       req.session.userData = userData;
+//       // Send a success alert message and then redirect or perform any other actions
+//       res.send('<script>alert("Login successful."); window.location.href = "/dashboard";</script>');
+//     } else {
+//       // User email is not confirmed, show an error message
+//       res.send('<script>alert("Email not confirmed. Please check your email for a confirmation link."); window.location.href = "/login";</script>');
+//     }
+//   } else {
+//     // User not found, show an error message
+//     res.send('<script>alert("Invalid email or password. Please try again. Did you sign up?"); window.location.href = "/login";</script>');
+//   }
+// });
+
 app.post('/login', async (req, res) => {
   const querySnapShot = await db.collection('First')
     .where("Email", "==", req.body.Email)
@@ -112,7 +229,6 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// TODO if and only if user logs in
 app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
   const userEmail = req.session.userData ? req.session.userData.Useremail : null;
 
