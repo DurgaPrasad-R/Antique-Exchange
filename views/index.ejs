@@ -14,7 +14,7 @@
     <%- include('header',{globalCategories: globalCategories}); -%>
     <%- include('section'); -%>
     <!-- Display sellerItems -->
-    <div class="seller-items">
+    <div class="seller-items-container">
         <!-- Check if sellerItems object is not empty before rendering the section -->
         <% if (typeof sellerItems !== 'undefined' && Object.keys(sellerItems).length > 0) { %>
             <h2>New Arrivals</h2>
@@ -27,8 +27,7 @@
                             <!-- Display item details, you can modify this as needed -->
                             <div class="sellerimage"><img class="seller-item-image" src="<%= categoryItems[i].SellerItemImage %>" alt="Item Image"></div>
                             <h3 class="seller-item-name"><%= categoryItems[i].SellerItemName %></h3>
-                            <p class="seller-item-price">₹<%= categoryItems[i].SellerItemPrice %><span class="randomPrice">₹2500</span></p>
-                            <p class="seller-item-category"><%= categoryItems[i].SellerCategory %></p>
+                            <p class="seller-item-price">MRP: ₹<%= categoryItems[i].SellerItemPrice %><span class="randomPrice">₹2500</span></p>
                         </li>
                         <!-- Add a "View More" button at the end of each category -->
                         <% if (i === Math.min(categoryItems.length,4)) { %>
