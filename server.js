@@ -14,15 +14,15 @@ app.set('view engine', 'ejs');
 const multer = require('multer');
 
 // Set up multer storage and specify the upload directory
-const storage = multer.memoryStorage();
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'public/uploads'); // Save uploaded files to the "uploads" folder
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + '-' + file.originalname); // Use a unique filename
-//   },
-// });
+// const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads'); // Save uploaded files to the "uploads" folder
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); // Use a unique filename
+  },
+});
 const upload = multer({ storage: storage });
 
 const ejs = require('ejs');
@@ -161,7 +161,8 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
         // Create a new seller item document within the subcollection
         await sellerItemsCollection.add({
           SellerEmail: userEmail,
-          SellerItemImage: imageFile.buffer.toString('base64'), // Store the image as a base64-encoded string
+          // SellerItemImage: imageFile.buffer.toString('base64'), // Store the image as a base64-encoded string
+          SellerItemImage: '/uploads/' + imageFile.filename,
           SellerItemName: Name,
           SellerItemPrice: Price,
           SellerCategory: Category,
@@ -204,9 +205,11 @@ const fetchSellerItems = async () => {
           snapshot.forEach((itemDoc) => {
             const itemData = itemDoc.data();
             // Convert the Base64 image data to an image URL for JPG images
-            const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage; // Use 'image/jpeg' for JPG images
+            // const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage; // Use 'image/jpeg' for JPG images
             // Add the image URL to the item data
-            itemData.SellerItemImage = imageDataURL;
+            // itemData.SellerItemImage = imageDataURL;
+            const imagePathOrURL = itemData.SellerItemImage;
+            itemData.SellerItemImage = imagePathOrURL;
             items.push(itemData);
           });
           return items;
@@ -281,9 +284,11 @@ const fetchCategoryItems = async (category) => {
       categorySnapShot.forEach((itemDoc) => {
         const itemData = itemDoc.data();
         // Convert the Base64 image data to an image URL for JPG images
-        const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage; // Use 'image/jpeg' for JPG images
+        // const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage; // Use 'image/jpeg' for JPG images
         // Add the image URL to the item data
-        itemData.SellerItemImage = imageDataURL;
+        // itemData.SellerItemImage = imageDataURL;
+        const imagePathOrURL = itemData.SellerItemImage;
+        itemData.SellerItemImage = imagePathOrURL;
         categoryItems.push(itemData);
       });
     });
@@ -338,9 +343,11 @@ const fetchItemDetailsByNameInCategory = async (category, itemName) => {
         const itemData = itemDoc.data();
 
         // Convert the Base64 image data to an image URL for JPG images
-        const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage;
+        // const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage;
         // Add the image URL to the item details
-        itemData.SellerItemImage = imageDataURL;
+        // itemData.SellerItemImage = imageDataURL;
+        const imagePathOrURL = itemData.SellerItemImage;
+        itemData.SellerItemImage = imagePathOrURL;
         itemDetails.push(itemData);
       });
     });
