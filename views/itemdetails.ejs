@@ -22,13 +22,15 @@
                     <div class="itemContent">
                         <h2><%= itemDetails.SellerItemName %></h2>
                         <h3>Price: ₹<%= itemDetails.SellerItemPrice %></h3>
+                        <!-- <h3>Price: ₹<%= itemDetails.SellerEmail %></h3> -->
                         <p>Description: <%= itemDetails.SellerItemDescription %></p>
                     </div>
                 </div>
                 <!-- Add any other item details you want to display here -->
             </div>
             <div class="order-form">
-                <form action="">
+                <form action="/place-order" method="post">
+                    <input type="hidden" name="itemDetails" value="<%= JSON.stringify(itemDetails) %>">
                     <div class="Days">
                         <label for="ndays">No. of days</label><br>
                         <input type="number" name="NDays" id="ndays" required>
@@ -69,7 +71,7 @@
                     </div>
                     <div class="msg">Currently we prefer Cash On Delivery</div>
                     <div class="buttons">
-                        <button class="addToBag" onclick="AddToBag()">Add to Bag</button><br>
+                        <button class="addToBag" onclick="">Add to Bag</button><br>
                         <button class="placeOrder" onclick="">Place Order</button>
                     </div>
                 </form>
@@ -78,10 +80,5 @@
             <p>Item details not found.</p>
         <% } %>
     </div>
-    <script>
-        // function AddToBag(){
-
-        // }
-    </script>
 </body>
 </html>

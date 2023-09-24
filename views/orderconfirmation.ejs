@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/receipt-style.css">
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+</head>
+<body>
+    <%- include('header',{globalCategories:globalCategories}); -%>
+    <div class="order-confirmation receipt">
+        <h2>Order Confirmation</h2>
+        <p>Your order has been successfully placed. Here is your receipt:</p>
+
+        <!-- Display order details using the variables -->
+        <div class="order-details">
+            <div class="order-number"><b>Order Number: </b><span id="ono"></span></div>
+            <p><b>Items Purchased:</b></p>
+            <ul>
+                <li><%= session.orderDetails.itemDetails.SellerItemName %>: ₹<%= session.orderDetails.itemDetails.SellerItemPrice %></li>
+            </ul>
+            <p><b>Delivery Address:</b></p>
+            <address>
+                <div class="full-name"><b><%= session.orderDetails.fullName %></b></div>
+                <div class="address-details">
+                    <%= session.orderDetails.flat %>, <%= session.orderDetails.street %><br>
+                    <%= session.orderDetails.townCity %>, <%= session.orderDetails.state %> - <%= session.orderDetails.pincode %>
+                </div>
+                <div class="phone-email">
+                    <b>Phone:</b> <%= session.orderDetails.mobile %><br>
+                    <b>Email:</b> <span id="email"><%= session.userData.Useremail %></span>
+                </div>
+            </address>
+            <input type="hidden" id="seller-email" value=<%= session.orderDetails.itemDetails.SellerEmail %>>
+        </div>
+
+        <p><b>Thank you for shopping with us!</b></p>
+
+        <!-- Add a link to return to the dashboard or homepage -->
+        <a href="/dashboard" class="back-to-dashboard">Back to Dashboard</a>
+    </div>
+    <!-- <script>
+        const no = Math.floor(Math.random()*10000)
+        document.getElementById("ono").innerHTML = no;
+        const userEmail = document.getElementById("email").innerHTML;
+        const selleremail = document.getElementById("seller-email").value;
+        Email.send({
+            SecureToken : "ed3bfa0d-91d6-4f5c-a638-d701875e70b4",
+            To : userEmail,
+            From : 'antiqueexchangea@gmail.com',
+            Subject : "Order Confirmation",
+            Body : "Thank you for your order. Here is your receipt."
+        }).then(
+        message => console.log("Sent to the user",message)
+        );
+        Email.send({
+            SecureToken : "ed3bfa0d-91d6-4f5c-a638-d701875e70b4",
+            To : selleremail,
+            From : 'antiqueexchangea@gmail.com',
+            Subject : "New Order Received",
+            Body : "You have received a new order. Here are the details."
+        }).then(
+            message => console.log("Sent to the seller",message)
+        );
+    </script> -->
+</body>
+</html>

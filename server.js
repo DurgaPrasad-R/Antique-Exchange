@@ -47,6 +47,18 @@ app.use(session({
   saveUninitialized: true,
 }));
 
+function checkAuthentication(req, res, next) {
+  const session = req.session;
+  console.log(session)
+  // Check if there is no active session
+  if (!session && !session.userData) {
+    return res.redirect('/login');
+  }
+
+  // User is authenticated, proceed to the requested route
+  next();
+}
+
 // Endpoints to serve the HTML files
 app.get('/dashboard', async (req, res) => {
   try {
@@ -54,7 +66,7 @@ app.get('/dashboard', async (req, res) => {
     const sellerItems = await fetchSellerItems();
     const session = req.session;
     // Render the index.ejs template and pass the sellerItems data as a variable
-    res.render('index', { sellerItems , session, globalCategories});
+    res.render('index', { sellerItems, session, globalCategories });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -71,7 +83,7 @@ app.get('/signup', (req, res) => {
 
 app.get('/seller', (req, res) => {
   const session = req.session;
-  res.render('seller',{session,globalCategories});
+  res.render('seller', { session, globalCategories });
 });
 
 // Endpoints for API
@@ -230,7 +242,7 @@ const fetchSellerItems = async () => {
           sellerItems[category] = [];
         }
         sellerItems[category].push(item);
-        
+
         if (!globalCategories.includes(category)) {
           globalCategories.push(category);
         }
@@ -254,7 +266,7 @@ app.get('/category/:categoryName', async (req, res) => {
     // Render a new template (e.g., category.ejs) to display the category-specific items
     // Pass the categoryItems data as a variable to your template
     // console.log(session.userData)
-    res.render('category', { categoryItems , session, globalCategories});
+    res.render('category', { categoryItems, session, globalCategories });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -311,7 +323,7 @@ app.get('/item/:categoryName/:itemName', async (req, res) => {
 
     // Render a new template (e.g., item-details.ejs) to display the item details
     // Pass the itemDetails data as a variable to your template
-    res.render('itemdetails', { itemDetails , session, globalCategories});
+    res.render('itemdetails', { itemDetails, session, globalCategories });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -368,6 +380,59 @@ app.get('/logout', (req, res) => {
       res.redirect('/login');
     }
   });
+});
+
+app.post('/place-order', (req, res) => {
+  // Retrieve the item details from the request's hidden input field
+  const itemDetailsJson = req.body.itemDetails;
+
+  try {
+    // Parse the JSON string back to an object
+    const itemDetails = JSON.parse(itemDetailsJson);
+
+    // Retrieve other order details from the form fields
+    const nDays = req.body.NDays;
+    const fullName = req.body.FullName;
+    const mobile = req.body.Mobile;
+    const pincode = req.body.Pincode;
+    const flat = req.body.Flat;
+    const street = req.body.Street;
+    const landmark = req.body.Landmark;
+    const townCity = req.body['Town/City'];
+    const state = req.body.State;
+
+    // Store the order details in the session
+    req.session.orderDetails = {
+      itemDetails,
+      nDays,
+      fullName,
+      mobile,
+      pincode,
+      flat,
+      street,
+      landmark,
+      townCity,
+      state,
+    };
+
+    if (!req.session.userData) {
+      // Handle the case where there are no order details in the session
+      res.send('<script>alert("Please login. Before you buy any item"); window.location.href = "/login";</script>');
+    } else{
+      res.redirect('/order-confirmation');
+    }
+  } catch (error) {
+    console.error('Error parsing item details:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Add a route for the order confirmation page
+app.get('/order-confirmation', (req, res) => {
+  // Retrieve the order details from the session
+  const session = req.session;
+  // Render the order confirmation page and pass the order details as variables
+  res.render('orderconfirmation', { session, globalCategories});
 });
 
 app.listen(port, () => {
