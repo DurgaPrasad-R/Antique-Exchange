@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        /* Style for the table */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,td {
+            text-align: center;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Style for the images */
+        .image img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+
+        .dash{
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .dash:hover{
+            background-color: #0056b3;
+        }
+
+        .dboard{
+            display: flex;
+            justify-content: center;
+        }
+
+    </style>
+</head>
+<body>
+    <%- include('header',{globalCategories:globalCategories}); -%>
+    <h1>Your Order Details</h1>
+    
+    <% if (orders && orders.length > 0) { %>
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Date</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% orders.forEach((order) => { %>
+                <tr>
+                    <td class="image"><img src="<%= order.itemDetails.SellerItemImage %>" alt="<%= order.itemDetails.SellerItemName %>"></td>
+                    <td><%= order.orderDate.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %></td>
+                    <td>₹<%= order.itemDetails.SellerItemPrice %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+    <% } else { %>
+        <p>No orders found.</p>
+    <% } %>
+    <div class="dboard">
+        <a href="/dashboard" class="dash">Back to Dashboard</a>
+    </div>
+</body>
+</html>

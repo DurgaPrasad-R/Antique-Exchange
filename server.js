@@ -382,50 +382,115 @@ app.get('/logout', (req, res) => {
   });
 });
 
-app.post('/place-order', (req, res) => {
+app.post('/place-order', async (req, res) => {
   // Retrieve the item details from the request's hidden input field
-  const itemDetailsJson = req.body.itemDetails;
+  const userEmail = req.session.userData ? req.session.userData.Useremail : null;
+  if (userEmail){
+    try {
+      // Retrieve the user's document based on their email
+      const querySnapshot = await db.collection('First')
+        .where("Email", "==", userEmail)
+        .get();
 
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+
+        // Create a reference to the "orders" subcollection
+        const ordersCollection = userDoc.ref.collection('orders');
+        const itemDetailsJson = req.body.itemDetails;
+
+          // Parse the JSON string back to an object
+          const itemDetails = JSON.parse(itemDetailsJson);
+
+          // Retrieve other order details from the form fields
+          const nDays = req.body.NDays;
+          const fullName = req.body.FullName;
+          const mobile = req.body.Mobile;
+          const pincode = req.body.Pincode;
+          const flat = req.body.Flat;
+          const street = req.body.Street;
+          const landmark = req.body.Landmark;
+          const townCity = req.body['Town/City'];
+          const state = req.body.State;
+
+          // Store the order details in the session
+          orderData = {
+            itemDetails,
+            nDays,
+            fullName,
+            mobile,
+            pincode,
+            flat,
+            street,
+            landmark,
+            townCity,
+            state,
+            orderDate: new Date()
+          };
+
+          req.session.orderDetails = orderData;
+          // console.log(req.session);
+
+          // Add the order data to the "orders" subcollection
+          await ordersCollection.add(orderData);
+
+          // Redirect to the order confirmation page
+          res.redirect('/order-confirmation');
+        } else {
+          res.send('<script>alert("User does not exist: Please Signup."); window.location.href = "/signup";</script>');
+        }
+    } catch (error) {
+      console.error('Error parsing item details:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  } else {
+    res.send('<script>alert("Please login. Before you buy any item"); window.location.href = "/login";</script>');
+  }
+});
+
+app.get('/orders', async (req, res) => {
   try {
-    // Parse the JSON string back to an object
-    const itemDetails = JSON.parse(itemDetailsJson);
+    const userEmail = req.session.userData ? req.session.userData.Useremail : null;
 
-    // Retrieve other order details from the form fields
-    const nDays = req.body.NDays;
-    const fullName = req.body.FullName;
-    const mobile = req.body.Mobile;
-    const pincode = req.body.Pincode;
-    const flat = req.body.Flat;
-    const street = req.body.Street;
-    const landmark = req.body.Landmark;
-    const townCity = req.body['Town/City'];
-    const state = req.body.State;
+    if (!userEmail) {
+      // Handle the case where the user is not logged in
+      res.redirect('/login'); // Redirect to the login page or display an error message
+      return;
+    }
 
-    // Store the order details in the session
-    req.session.orderDetails = {
-      itemDetails,
-      nDays,
-      fullName,
-      mobile,
-      pincode,
-      flat,
-      street,
-      landmark,
-      townCity,
-      state,
-    };
+    // Query Firestore to get the user's document
+    const userQuerySnapshot = await db.collection('First')
+      .where('Email', '==', userEmail)
+      .get();
 
-    if (!req.session.userData) {
-      // Handle the case where there are no order details in the session
-      res.send('<script>alert("Please login. Before you buy any item"); window.location.href = "/login";</script>');
-    } else{
-      res.redirect('/order-confirmation');
+    if (!userQuerySnapshot.empty) {
+      const userDoc = userQuerySnapshot.docs[0];
+
+      // Query the "orders" subcollection for the user's orders
+      const ordersSnapshot = await userDoc.ref.collection('orders')
+        .orderBy('orderDate', 'desc') // Order by date in descending order (most recent first)
+        .get();
+
+      const orders = [];
+
+      ordersSnapshot.forEach((orderDoc) => {
+        const orderData = orderDoc.data();
+        orders.push(orderData);
+      });
+      const session = req.session;
+      // Render a template to display the user's order history
+      res.render('orders', { orders, globalCategories, session });
+    } else {
+      // Handle the case where the user's document doesn't exist
+      res.send('<script>alert("User does not exist: Please Signup."); window.location.href = "/signup";</script>');
     }
   } catch (error) {
-    console.error('Error parsing item details:', error);
+    console.error('Error fetching orders:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
 
 // Add a route for the order confirmation page
 app.get('/order-confirmation', (req, res) => {

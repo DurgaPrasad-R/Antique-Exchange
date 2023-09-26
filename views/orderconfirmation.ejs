@@ -44,29 +44,57 @@
         <!-- Add a link to return to the dashboard or homepage -->
         <a href="/dashboard" class="back-to-dashboard">Back to Dashboard</a>
     </div>
-    <!-- <script>
+    <script type="text/javascript">
         const no = Math.floor(Math.random()*10000)
         document.getElementById("ono").innerHTML = no;
         const userEmail = document.getElementById("email").innerHTML;
         const selleremail = document.getElementById("seller-email").value;
+        const ebody = `
+            <div class="order-confirmation receipt">
+                <h2>Order Confirmation</h2>
+                <p>Your order has been successfully placed. Here is your receipt:</p>
+
+                <!-- Display order details using the variables -->
+                <div class="order-details">
+                    <div class="order-number"><b>Order Number: </b><span id="ono"></span></div>
+                    <p><b>Items Purchased:</b></p>
+                    <ul>
+                        <li><%= session.orderDetails.itemDetails.SellerItemName %>: ₹<%= session.orderDetails.itemDetails.SellerItemPrice %></li>
+                    </ul>
+                    <p><b>Delivery Address:</b></p>
+                    <address>
+                        <div class="full-name"><b><%= session.orderDetails.fullName %></b></div>
+                        <div class="address-details">
+                            <%= session.orderDetails.flat %>, <%= session.orderDetails.street %><br>
+                            <%= session.orderDetails.townCity %>, <%= session.orderDetails.state %> - <%= session.orderDetails.pincode %>
+                        </div>
+                        <div class="phone-email">
+                            <b>Phone:</b> <%= session.orderDetails.mobile %><br>
+                            <b>Email:</b> <span id="email"><%= session.userData.Useremail %></span>
+                        </div>
+                    </address>
+                    <input type="hidden" id="seller-email" value=<%= session.orderDetails.itemDetails.SellerEmail %>>
+                </div>
+            </div>
+        `;
         Email.send({
-            SecureToken : "ed3bfa0d-91d6-4f5c-a638-d701875e70b4",
+            SecureToken : "eb12f7df-0872-4bd7-8414-4ee48c345553",
             To : userEmail,
             From : 'antiqueexchangea@gmail.com',
             Subject : "Order Confirmation",
-            Body : "Thank you for your order. Here is your receipt."
+            Body : ebody
         }).then(
         message => console.log("Sent to the user",message)
         );
         Email.send({
-            SecureToken : "ed3bfa0d-91d6-4f5c-a638-d701875e70b4",
+            SecureToken : "eb12f7df-0872-4bd7-8414-4ee48c345553",
             To : selleremail,
             From : 'antiqueexchangea@gmail.com',
             Subject : "New Order Received",
-            Body : "You have received a new order. Here are the details."
+            Body : ebody
         }).then(
             message => console.log("Sent to the seller",message)
         );
-    </script> -->
+    </script>
 </body>
 </html>
