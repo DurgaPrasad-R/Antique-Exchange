@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Wishlist</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&display=swap" rel="stylesheet">
@@ -59,31 +59,30 @@
 </head>
 <body>
     <%- include('header',{globalCategories:globalCategories}); -%>
-    <h1>Your Order Details</h1>
-    
-    <% if (orders && orders.length > 0) { %>
+    <% if (wishlist && wishlist.length > 0) { %>
+    <h1>Your Wishlist</h1>
     <table>
         <thead>
             <tr>
-                <th>Image</th>
-                <th>Date</th>
-                <th>Price</th>
-                <th>More Details</th>
+                <th>Item Image</th>
+                <th>Item Name</th>
+                <th>Item Price</th>
+                <th>View More</th>
             </tr>
         </thead>
         <tbody>
-            <% orders.forEach((order) => { %>
+            <% wishlist.forEach((item) => { %>
                 <tr>
-                    <td class="image"><img src="<%= order.itemDetails.SellerItemImage %>" alt="<%= order.itemDetails.SellerItemName %>"></td>
-                    <td><%= order.orderDate.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %></td>
-                    <td>₹<%= order.itemDetails.SellerItemPrice %></td>
-                    <td><a href="/order-details/<%= order.orderID %>">View More</a></td>
+                    <td class="image"><img src="<%= item.SellerItemImage %>" alt="<%= item.SellerItemName %>" width="100"></td>
+                    <td><%= item.SellerItemName %></td>
+                    <td>₹<%= item.SellerItemPrice %></td>
+                    <td><a href="/item/<%= item.SellerCategory %>/<%= item.SellerItemName %>">View More</a></td>
                 </tr>
             <% }); %>
         </tbody>
     </table>
     <% } else { %>
-        <p>No orders found.</p>
+        <p>Your wishlist is empty.</p>
     <% } %>
     <div class="dboard">
         <a href="/dashboard" class="dash">Back to Dashboard</a>

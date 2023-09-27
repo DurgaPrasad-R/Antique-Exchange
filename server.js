@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const passwordHash = require('password-hash');
+const swal = require('sweetalert');
 app.use(express.json());
 app.use(express.urlencoded());
 
@@ -47,18 +48,6 @@ app.use(session({
   saveUninitialized: true,
 }));
 
-function checkAuthentication(req, res, next) {
-  const session = req.session;
-  console.log(session)
-  // Check if there is no active session
-  if (!session && !session.userData) {
-    return res.redirect('/login');
-  }
-
-  // User is authenticated, proceed to the requested route
-  next();
-}
-
 // Endpoints to serve the HTML files
 app.get('/dashboard', async (req, res) => {
   try {
@@ -82,6 +71,13 @@ app.get('/signup', (req, res) => {
 });
 
 app.get('/seller', (req, res) => {
+  const userEmail = req.session.userData ? req.session.userData.Useremail : null;
+
+    if (!userEmail) {
+      // Handle the case where the user is not logged in
+      res.redirect('/login'); // Redirect to the login page or display an error message
+      return;
+    }
   const session = req.session;
   res.render('seller', { session, globalCategories });
 });
@@ -316,13 +312,11 @@ app.get('/item/:categoryName/:itemName', async (req, res) => {
   try {
     const categoryName = req.params.categoryName;
     const itemName = req.params.itemName;
-    const session = req.session
 
     // Call the function to fetch item details by name in the specified category
     const itemDetails = await fetchItemDetailsByNameInCategory(categoryName, itemName);
-
-    // Render a new template (e.g., item-details.ejs) to display the item details
-    // Pass the itemDetails data as a variable to your template
+    req.session.itemDetails = itemDetails;
+    const session = req.session;
     res.render('itemdetails', { itemDetails, session, globalCategories });
   } catch (error) {
     console.error('Error:', error);
@@ -382,6 +376,112 @@ app.get('/logout', (req, res) => {
   });
 });
 
+app.get('/wishlist', async (req, res) => {
+  const session = req.session;
+  const userEmail = req.session.userData ? req.session.userData.Useremail : null;
+
+  if (!userEmail) {
+    res.send('<script>alert("Please login. Before you add to wishlist"); window.location.href = "/login";</script>');
+  } else {
+    const querySnapshot = await db.collection('First')
+      .where("Email", "==", userEmail)
+      .get();
+    const userDoc = querySnapshot.docs[0];
+    const itemDetails = {
+      SellerItemName: req.session.itemDetails.SellerItemName,
+      SellerCategory: req.session.itemDetails.SellerCategory,
+      SellerItemPrice: req.session.itemDetails.SellerItemPrice,
+      SellerItemImage: req.session.itemDetails.SellerItemImage
+    };
+    const currentWishlist = userDoc.data().wishlist || [];
+
+    const itemExists = currentWishlist.some(item => {
+      return (
+        item.SellerItemName === itemDetails.SellerItemName &&
+        item.SellerItemPrice === itemDetails.SellerItemPrice &&
+        item.SellerItemImage === itemDetails.SellerItemImage
+      );
+    });
+    if (itemExists) {
+      // Display a message that the item is already in the wishlist
+      res.send(`
+        <html>
+        <head>
+          <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        </head>
+        <body>
+          <script>
+            swal({
+              title: "Already added!",
+              text: "Item already in your wishlist.",
+              icon: "info",
+              button: "OK"
+            }).then(() => {
+              window.location.href = "/dashboard";
+            });
+          </script>
+        </body>
+        </html>
+      `);
+    } else {
+      currentWishlist.push(itemDetails);
+      
+      // Update the user's wishlist in the database
+      await userDoc.ref.update({ wishlist: currentWishlist });
+
+      // Display the success message using SweetAlert
+      res.send(`
+        <html>
+        <head>
+          <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        </head>
+        <body>
+          <script>
+            swal({
+              title: "Success!",
+              text: "Item added to your wishlist.",
+              icon: "success",
+              button: "OK"
+            }).then(() => {
+              window.location.href = "/dashboard";
+            });
+          </script>
+        </body>
+        </html>
+      `);
+    }
+}
+});
+
+app.get('/wishlistDetails', async (req, res) => {
+  const session = req.session;
+  const userEmail = req.session.userData ? req.session.userData.Useremail : null;
+
+  if (!userEmail) {
+    res.send('<script>alert("Please login. Before you view your wishlist"); window.location.href = "/login";</script>');
+  } else {
+    try {
+      const querySnapshot = await db.collection('First')
+        .where("Email", "==", userEmail)
+        .get();
+      const userDoc = querySnapshot.docs[0];
+
+      if (!userDoc.exists) {
+        res.status(404).json({ error: 'User not found' });
+        return;
+      }
+
+      const wishlist = userDoc.data().wishlist || [];
+
+      // Render a template to display the wishlist items
+      res.render('wishlistData', { wishlist, session, globalCategories });
+    } catch (error) {
+      console.error('Error fetching wishlist:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+});
+
 app.post('/place-order', async (req, res) => {
   // Retrieve the item details from the request's hidden input field
   const userEmail = req.session.userData ? req.session.userData.Useremail : null;
@@ -412,11 +512,14 @@ app.post('/place-order', async (req, res) => {
           const landmark = req.body.Landmark;
           const townCity = req.body['Town/City'];
           const state = req.body.State;
-
+          const quantity = req.body.No;
+          const TotalPrice = quantity*nDays*itemDetails.SellerItemPrice;
           // Store the order details in the session
           orderData = {
             itemDetails,
+            quantity,
             nDays,
+            TotalPrice,
             fullName,
             mobile,
             pincode,
@@ -425,7 +528,8 @@ app.post('/place-order', async (req, res) => {
             landmark,
             townCity,
             state,
-            orderDate: new Date()
+            orderDate: new Date(),
+            orderID: Math.floor(Math.random()*10000)
           };
 
           req.session.orderDetails = orderData;
@@ -490,7 +594,37 @@ app.get('/orders', async (req, res) => {
   }
 });
 
-
+app.get('/order-details/:orderID', async (req, res) => {
+  try {
+    // Check if the user is authenticated
+    const userEmail = req.session.userData ? req.session.userData.Useremail : null;
+    const orderID = req.params.orderID;
+    
+    if (!userEmail) {
+      // Redirect to the login page or display an error message if the user is not logged in
+      res.redirect('/login'); // You can customize this behavior
+      return;
+    }
+    const userQuerySnapshot = await db.collection('First')
+    .where('Email', '==', userEmail)
+    .get();
+    const userDoc = userQuerySnapshot.docs[0];
+    // Access the 'orders' subcollection within the user document
+    const ordersCollection = userDoc.ref.collection('orders');
+    // Now, you can query the 'orders' subcollection based on 'orderID'
+    const orderQuerySnapshot = await ordersCollection.get();
+    const session = req.session;
+    orderQuerySnapshot.forEach((orderDoc) => {
+      if (orderDoc.data().orderID == orderID){
+        const orderedData = orderDoc.data();
+        res.render("orderDetails",{orderedData,session,globalCategories})
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching order details:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 // Add a route for the order confirmation page
 app.get('/order-confirmation', (req, res) => {

@@ -22,11 +22,9 @@
                     <div class="itemContent">
                         <h2><%= itemDetails.SellerItemName %></h2>
                         <h3>Price: ₹<%= itemDetails.SellerItemPrice %></h3>
-                        <!-- <h3>Price: ₹<%= itemDetails.SellerEmail %></h3> -->
                         <p>Description: <%= itemDetails.SellerItemDescription %></p>
                     </div>
                 </div>
-                <!-- Add any other item details you want to display here -->
             </div>
             <div class="order-form">
                 <form action="/place-order" method="post">
@@ -35,6 +33,10 @@
                         <label for="ndays">No. of days</label><br>
                         <input type="number" name="NDays" id="ndays" required>
                     </div>
+                    <div class="quant">
+                        <label for="quantity">Quantity</label><br>
+                        <input type="number" name="No" id="quantity" required>
+                    </div>
                     <div class="Fname">
                         <label for="fname">Full Name (First and Last)</label><br>
                         <input type="text" name="FullName" id="fname">
@@ -42,10 +44,6 @@
                     <div class="Mobile">
                         <label for="mobile">Mobile Number</label><br>
                         <input type="text" name="Mobile" id="mobile" required>
-                    </div>
-                    <div class="Pincode">
-                        <label for="pincode">Pincode</label><br>
-                        <input type="number" name="Pincode" id="pincode" required>
                     </div>
                     <div class="flat">
                         <label for="dno">House No./Flat No.</label><br>
@@ -68,13 +66,17 @@
                             <label for="state">State</label><br>
                             <input type="text" name="State" id="state"required>
                         </div>
+                        <div class="Pincode">
+                            <label for="pincode">Pincode</label><br>
+                            <input type="number" name="Pincode" id="pincode" required>
+                        </div>
                     </div>
                     <div class="msg">Currently we prefer Cash On Delivery</div>
                     <div class="buttons">
                         <button class="placeOrder">Place Order</button>
                     </div>
                 </form>
-                <button class="addToBag" onclick="">Add to Bag</button>
+                <a href="/wishlist">Add to Wishlist</a>
             </div>
         <% } else { %>
             <p>Item details not found.</p>

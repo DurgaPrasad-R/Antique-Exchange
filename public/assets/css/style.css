@@ -20,6 +20,11 @@ header{
     color: white;
 }
 
+footer{
+    padding: 1vw;
+    background-color: lightgray;
+}
+
 .mylogo{
     padding: 2vh;
     display: flex;
@@ -150,7 +155,6 @@ background-color: #555;
 /* Define styles for the seller-items section */
 /* Style the seller-items section */
 .seller-items-container{
-    margin: 1vh 1vh;
     padding: 10px;
 }
 

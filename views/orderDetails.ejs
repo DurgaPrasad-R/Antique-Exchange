@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/receipt-style.css">
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+</head>
+<body>
+    <%- include('header',{globalCategories:globalCategories}); -%>
+    <div class="order-confirmation receipt">
+        <h2>Order Details</h2>
+        <!-- Display order details using the variables -->
+        <div class="order-details">
+            <div class="order-number"><b>Order Number: </b><span><%= orderedData.orderID %></span></div>
+            <p><b>Items Purchased:</b></p>
+            <ul>
+                <li><%= orderedData.itemDetails.SellerItemName %>: ₹<%= orderedData.itemDetails.SellerItemPrice %></li>
+                <li>Days: <%= orderedData.nDays %></li>
+                <li>Quantity: <%= orderedData.quantity %></li>
+                <li>Total Price: ₹<%= orderedData.TotalPrice %></li>
+            </ul>
+            <p><b>Delivery Address:</b></p>
+            <address>
+                <div class="full-name"><b><%= orderedData.fullName %></b></div>
+                <div class="address-details">
+                    <%= orderedData.flat %>, <%= orderedData.street %><br>
+                    <%= orderedData.townCity %>, <%= orderedData.state %> - <%= orderedData.pincode %>
+                </div>
+                <div class="phone-email">
+                    <b>Phone:</b> <%= orderedData.mobile %><br>
+                    <b>Email:</b> <span id="email"><%= session.userData.Useremail %></span>
+                </div>
+            </address>
+        </div>
+        <a href="/orders" class="back-to-dashboard">Back to Orders</a>
+    </div>
+</body>
+</html>

@@ -38,6 +38,19 @@
             <% } %>
         <% } %>
     </div>
-    <footer></footer>
+    <footer>
+        &copy; Copyrights reserved. This is a platform where people can rent or let others rent items for special occassions or events.
+        <div class="contact">
+            <p>Contact us: <button onclick="sendEmail()">Email</button></p>
+        </div>
+    </footer>
+    <script type="text/javascript">
+        function sendEmail() {
+            const emailAddress = 'antiqueexchangea@gmail.com';
+
+            const mailtoLink = `mailto:${emailAddress}`;
+            window.location.href = mailtoLink;
+        }
+    </script>
 </body>
 </html>
