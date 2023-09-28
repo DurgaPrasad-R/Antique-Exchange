@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const passwordHash = require('password-hash');
-const swal = require('sweetalert');
 app.use(express.json());
 app.use(express.urlencoded());
 
@@ -14,14 +13,13 @@ app.set('view engine', 'ejs');
 
 const multer = require('multer');
 
-// Set up multer storage and specify the upload directory
-// const storage = multer.memoryStorage();
 const storage = multer.diskStorage({
+  // To save uploaded files to the "uploads" folder
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads'); // Save uploaded files to the "uploads" folder
+    cb(null, 'public/uploads'); 
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname); // Use a unique filename
+    cb(null, Date.now() + '-' + file.originalname);
   },
 });
 const upload = multer({ storage: storage });
@@ -54,7 +52,7 @@ app.get('/dashboard', async (req, res) => {
     // Call the fetchSellerItems function to fetch seller items
     const sellerItems = await fetchSellerItems();
     const session = req.session;
-    // Render the index.ejs template and pass the sellerItems data as a variable
+    // Rendering the index.ejs template and passing the sellerItems, session and globalCategories as a variable.
     res.render('index', { sellerItems, session, globalCategories });
   } catch (error) {
     console.error('Error:', error);
@@ -74,8 +72,8 @@ app.get('/seller', (req, res) => {
   const userEmail = req.session.userData ? req.session.userData.Useremail : null;
 
     if (!userEmail) {
-      // Handle the case where the user is not logged in
-      res.redirect('/login'); // Redirect to the login page or display an error message
+      // Redirects to the login page when the user didn't login
+      res.redirect('/login');
       return;
     }
   const session = req.session;
@@ -86,23 +84,59 @@ app.get('/seller', (req, res) => {
 app.post('/signup', async (req, res) => {
   const email = req.body.Email;
 
-  // Check if the user with the provided email already exists
+  // Checking if the user with the provided email already exists
   const existingUser = await db.collection('First')
     .where('Email', '==', email)
     .get();
 
   if (!existingUser.empty) {
-    // User already exists, redirect to the login page or send a message
-    res.send('<script>alert("User with this email already exists. Please login."); window.location.href = "/login";</script>');
+    // User already exists, redirect to the login page
+    res.send(`
+    <html>
+    <head>
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    </head>
+    <body>
+      <script>
+        swal({
+          title: "Info!",
+          text: "User with this email already exists. Please login.",
+          icon: "info",
+          button: "OK"
+        }).then(() => {
+          window.location.href = "/login";
+        });
+      </script>
+    </body>
+    </html>
+  `);
   } else {
-    // User is not registered, proceed with the signup
+    // User is not registered, details added to db
     await db.collection('First').add({
       Name: req.body.Name,
-      Email: email, // Use the email from the request
+      Email: email,
       Password: passwordHash.generate(req.body.Password)
     }).then(() => {
-      // Send a success message and then redirect to the login page
-      res.send('<script>alert("Signup Successful. Please login."); window.location.href = "/login";</script>');
+      // Sending a success message and then redirect to the login page
+      res.send(`
+      <html>
+      <head>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+      </head>
+      <body>
+        <script>
+          swal({
+            title: "Success!",
+            text: "Signup Successful. Please login.",
+            icon: "success",
+            button: "OK"
+          }).then(() => {
+            window.location.href = "/login";
+          });
+        </script>
+      </body>
+      </html>
+    `);
     });
   }
 });
@@ -123,13 +157,68 @@ app.post('/login', async (req, res) => {
       };
       req.session.userData = userData;
       // Send a success alert message and then redirect or perform any other actions
-      res.send('<script>alert("Login successful."); window.location.href = "/dashboard";</script>');
+      res.send(
+        `
+    <html>
+    <head>
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    </head>
+    <body>
+      <script>
+        swal({
+          title: "Success!",
+          text: "Login successful.",
+          icon: "success",
+          button: "OK"
+        }).then(() => {
+          window.location.href = "/dashboard";
+        });
+      </script>
+    </body>
+    </html>
+  `);
     } else {
-      res.send('<script>alert("Invalid email or password. Please try again."); window.location.href = "/login";</script>');
+      res.send(`
+        <html>
+        <head>
+          <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        </head>
+        <body>
+          <script>
+            swal({
+              title: "Invalid!",
+              text: "Invalid email or password. Please try again.",
+              icon: "warning",
+              button: "OK"
+            }).then(() => {
+              window.location.href = "/login";
+            });
+          </script>
+        </body>
+        </html>
+        `);
     }
   } else {
     // User not found, you can send an alert or error message
-    res.send('<script>alert("Email Not Found.Try Signing up?"); window.location.href = "/login";</script>');
+    res.send(`
+      <html>
+      <head>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+      </head>
+      <body>
+        <script>
+          swal({
+            title: "Info!",
+            text: "Email Not Found.Try Again?",
+            icon: "info",
+            button: "OK"
+          }).then(() => {
+            window.location.href = "/login";
+          });
+        </script>
+      </body>
+      </html>
+      `);
   }
 });
 
@@ -138,7 +227,7 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
 
   if (userEmail) {
     try {
-      // Retrieve the user's document based on their email
+      // Retrieving the user's document based on their email
       const querySnapshot = await db.collection('First')
         .where("Email", "==", userEmail)
         .get();
@@ -146,10 +235,10 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
       if (!querySnapshot.empty) {
         const userDoc = querySnapshot.docs[0];
 
-        // Create a reference to the "sellerItems" subcollection
+        // Creating a reference to the "sellerItems" subcollection
         const sellerItemsCollection = userDoc.ref.collection('sellerItems');
 
-        // Access the uploaded image file from req.file
+        // To Access the uploaded image file from req.file
         const imageFile = req.file;
         const fileSizeLimit = 1024 * 1024;
         if (!imageFile) {
@@ -160,16 +249,15 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
           return res.status(400).send('File size exceeds the 1MB limit.');
         }
 
-        // Get other data from the form submission
+        // retrieving other data from the form submission
         const Name = req.body['item-name'];
         const Price = req.body['item-price'];
         const Category = req.body['item-cat'];
         const Desc = req.body.Description;
 
-        // Create a new seller item document within the subcollection
+        // Creating a new seller item document within the subcollection
         await sellerItemsCollection.add({
           SellerEmail: userEmail,
-          // SellerItemImage: imageFile.buffer.toString('base64'), // Store the image as a base64-encoded string
           SellerItemImage: '/uploads/' + imageFile.filename,
           SellerItemName: Name,
           SellerItemPrice: Price,
@@ -177,45 +265,91 @@ app.post('/seller-data', upload.single('itemImage'), async (req, res) => {
           SellerItemDescription: Desc
         });
 
-        res.send('<script>alert("Seller data added successfully."); window.location.href = "/seller";</script>');
+        res.send(`
+        <html>
+        <head>
+          <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        </head>
+        <body>
+          <script>
+            swal({
+              title: "Success!",
+              text: "Seller data added successfully.",
+              icon: "success",
+              button: "OK"
+            }).then(() => {
+              window.location.href = "/seller";
+            });
+          </script>
+        </body>
+        </html>
+      `);
       } else {
-        // User's document does not exist, handle it accordingly
-        res.send('<script>alert("User does not exist: Please Signup."); window.location.href = "/signup";</script>');
+        res.send(`
+        <html>
+        <head>
+          <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        </head>
+        <body>
+          <script>
+            swal({
+              title: "Failed!",
+              text: "User does not exist: Please Signup.",
+              icon: "warning",
+              button: "OK"
+            }).then(() => {
+              window.location.href = "/signup";
+            });
+          </script>
+        </body>
+        </html>
+        `);
       }
     } catch (error) {
       console.error("Error adding seller data:", error);
       res.status(500).send("Internal Server Error");
     }
   } else {
-    // If user data doesn't exist in the session, handle it accordingly
-    res.send('<script>alert("Please login. Before you add the item to sell"); window.location.href = "/login";</script>');
+    res.send(`
+    <html>
+    <head>
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    </head>
+    <body>
+      <script>
+        swal({
+          title: "Info!",
+          text: "Please login. Before you add the item to sell",
+          icon: "info",
+          button: "OK"
+        }).then(() => {
+          window.location.href = "/login";
+        });
+      </script>
+    </body>
+    </html>
+  `);
   }
 });
 
-const globalCategories = []; // Initialize a global variable to store categories
+const globalCategories = []; // Initializing a global variable to store categories
 const fetchSellerItems = async () => {
   try {
-    // Query Firestore for seller items and store them in the sellerItems array
+    // Quering Firestore for seller items and store them in the sellerItems array
     const allUsersSnapshot = await db.collection('First').get();
     const sellerItems = {};
 
-    // Create an array to store promises for subcollection queries
     const subcollectionQueries = [];
 
-    // Iterate through each user document
     allUsersSnapshot.forEach((userDoc) => {
       // Query the "sellerItems" subcollection for the current user
       const sellerItemsQuery = userDoc.ref.collection('sellerItems')
-        .limit(6) // Adjust the limit to your desired number of random items per user
+        .limit(20)
         .get()
         .then((snapshot) => {
           const items = [];
           snapshot.forEach((itemDoc) => {
             const itemData = itemDoc.data();
-            // Convert the Base64 image data to an image URL for JPG images
-            // const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage; // Use 'image/jpeg' for JPG images
-            // Add the image URL to the item data
-            // itemData.SellerItemImage = imageDataURL;
             const imagePathOrURL = itemData.SellerItemImage;
             itemData.SellerItemImage = imagePathOrURL;
             items.push(itemData);
@@ -227,10 +361,10 @@ const fetchSellerItems = async () => {
       subcollectionQueries.push(sellerItemsQuery);
     });
 
-    // Wait for all subcollection queries to complete
+    // Waiting for all subcollection queries to complete
     const subcollectionResults = await Promise.all(subcollectionQueries);
 
-    // Iterate through the results and organize items by category
+    // Iterating through the results and organize items by category
     subcollectionResults.forEach((items) => {
       items.forEach((item) => {
         const category = item.SellerCategory;
@@ -256,12 +390,8 @@ app.get('/category/:categoryName', async (req, res) => {
   try {
     const categoryName = req.params.categoryName;
     const session = req.session
-    // Call a function to fetch all items related to the specified category
+    // Calling a function to fetch all items related to the specified category
     const categoryItems = await fetchCategoryItems(categoryName);
-
-    // Render a new template (e.g., category.ejs) to display the category-specific items
-    // Pass the categoryItems data as a variable to your template
-    // console.log(session.userData)
     res.render('category', { categoryItems, session, globalCategories });
   } catch (error) {
     console.error('Error:', error);
@@ -280,7 +410,6 @@ const fetchCategoryItems = async (category) => {
     categoryItemsSnapshot.forEach(async (userDoc) => {
       const subcollectionRef = userDoc.ref.collection('sellerItems');
 
-      // Query the subcollection for items in the specified category
       const categoryItemsQuery = subcollectionRef.where('SellerCategory', '==', category).get();
 
       categorySubItems.push(categoryItemsQuery);
@@ -291,10 +420,6 @@ const fetchCategoryItems = async (category) => {
     subCategoryQueries.forEach((categorySnapShot) => {
       categorySnapShot.forEach((itemDoc) => {
         const itemData = itemDoc.data();
-        // Convert the Base64 image data to an image URL for JPG images
-        // const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage; // Use 'image/jpeg' for JPG images
-        // Add the image URL to the item data
-        // itemData.SellerItemImage = imageDataURL;
         const imagePathOrURL = itemData.SellerItemImage;
         itemData.SellerItemImage = imagePathOrURL;
         categoryItems.push(itemData);
@@ -347,11 +472,6 @@ const fetchItemDetailsByNameInCategory = async (category, itemName) => {
     subItemQueries.forEach((itemSnapShot) => {
       itemSnapShot.forEach((itemDoc) => {
         const itemData = itemDoc.data();
-
-        // Convert the Base64 image data to an image URL for JPG images
-        // const imageDataURL = 'data:image/jpeg;base64,' + itemData.SellerItemImage;
-        // Add the image URL to the item details
-        // itemData.SellerItemImage = imageDataURL;
         const imagePathOrURL = itemData.SellerItemImage;
         itemData.SellerItemImage = imagePathOrURL;
         itemDetails.push(itemData);
@@ -370,8 +490,8 @@ app.get('/logout', (req, res) => {
     if (err) {
       console.error('Error destroying session:', err);
     } else {
-      // Redirect the user to the login page or any other desired action after logout
-      res.redirect('/login');
+      // Redirect the user to the dashboard page
+      res.redirect('/dashboard');
     }
   });
 });
@@ -381,7 +501,25 @@ app.get('/wishlist', async (req, res) => {
   const userEmail = req.session.userData ? req.session.userData.Useremail : null;
 
   if (!userEmail) {
-    res.send('<script>alert("Please login. Before you add to wishlist"); window.location.href = "/login";</script>');
+    res.send(`
+    <html>
+    <head>
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    </head>
+    <body>
+      <script>
+        swal({
+          title: "Info!",
+          text: "Please login. Before you add to wishlist!",
+          icon: "info",
+          button: "OK"
+        }).then(() => {
+          window.location.href = "/login";
+        });
+      </script>
+    </body>
+    </html>
+  `);
   } else {
     const querySnapshot = await db.collection('First')
       .where("Email", "==", userEmail)
@@ -458,7 +596,25 @@ app.get('/wishlistDetails', async (req, res) => {
   const userEmail = req.session.userData ? req.session.userData.Useremail : null;
 
   if (!userEmail) {
-    res.send('<script>alert("Please login. Before you view your wishlist"); window.location.href = "/login";</script>');
+    res.send(`
+    <html>
+    <head>
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    </head>
+    <body>
+      <script>
+        swal({
+          title: "Info!",
+          text: "Please login. Before you view your wishlist",
+          icon: "info",
+          button: "OK"
+        }).then(() => {
+          window.location.href = "/login";
+        });
+      </script>
+    </body>
+    </html>
+  `);
   } else {
     try {
       const querySnapshot = await db.collection('First')
@@ -479,6 +635,70 @@ app.get('/wishlistDetails', async (req, res) => {
       console.error('Error fetching wishlist:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
+  }
+});
+
+app.get('/remove-from-wishlist/:itemName', async (req, res) => {
+  const session = req.session;
+  const userEmail = req.session.userData ? req.session.userData.Useremail : null;
+
+  if (!userEmail) {
+    res.send(`
+    <html>
+    <head>
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    </head>
+    <body>
+      <script>
+        swal({
+          title: "Info!",
+          text: "Please login before removing from wishlist",
+          icon: "info",
+          button: "OK"
+        }).then(() => {
+          window.location.href = "/login";
+        });
+      </script>
+    </body>
+    </html>
+  `);
+  } else {
+    const itemNameToRemove = req.params.itemName;
+
+    const querySnapshot = await db.collection('First')
+      .where("Email", "==", userEmail)
+      .get();
+    const userDoc = querySnapshot.docs[0];
+    
+    const currentWishlist = userDoc.data().wishlist;
+
+    // Find the index of the item with the matching itemName in the wishlist
+    const itemIndex = currentWishlist.findIndex(item => item.SellerItemName === itemNameToRemove);
+
+    currentWishlist.splice(itemIndex, 1);
+
+    // Update the user's wishlist in the database
+    await userDoc.ref.update({ wishlist: currentWishlist });
+    // Display the success message using SweetAlert
+    res.send(`
+    <html>
+    <head>
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    </head>
+    <body>
+      <script>
+        swal({
+          title: "Success!",
+          text: "Item removed from your wishlist.",
+          icon: "success",
+          button: "OK"
+        }).then(() => {
+          window.location.href = "/wishlistDetails";
+        });
+      </script>
+    </body>
+    </html>
+  `);
   }
 });
 
@@ -548,7 +768,25 @@ app.post('/place-order', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   } else {
-    res.send('<script>alert("Please login. Before you buy any item"); window.location.href = "/login";</script>');
+    res.send(`
+    <html>
+    <head>
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    </head>
+    <body>
+      <script>
+        swal({
+          title: "Info!",
+          text: "Please login. Before you buy any item",
+          icon: "info",
+          button: "OK"
+        }).then(() => {
+          window.location.href = "/login";
+        });
+      </script>
+    </body>
+    </html>
+  `);
   }
 });
 
@@ -558,7 +796,7 @@ app.get('/orders', async (req, res) => {
 
     if (!userEmail) {
       // Handle the case where the user is not logged in
-      res.redirect('/login'); // Redirect to the login page or display an error message
+      res.redirect('/login'); // Redirect to the login page
       return;
     }
 
@@ -601,7 +839,7 @@ app.get('/order-details/:orderID', async (req, res) => {
     const orderID = req.params.orderID;
     
     if (!userEmail) {
-      // Redirect to the login page or display an error message if the user is not logged in
+      // Redirect to the login page
       res.redirect('/login'); // You can customize this behavior
       return;
     }
@@ -611,7 +849,7 @@ app.get('/order-details/:orderID', async (req, res) => {
     const userDoc = userQuerySnapshot.docs[0];
     // Access the 'orders' subcollection within the user document
     const ordersCollection = userDoc.ref.collection('orders');
-    // Now, you can query the 'orders' subcollection based on 'orderID'
+    // query the 'orders' subcollection based on 'orderID'
     const orderQuerySnapshot = await ordersCollection.get();
     const session = req.session;
     orderQuerySnapshot.forEach((orderDoc) => {

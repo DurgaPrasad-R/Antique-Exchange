@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
     <style>
-        /* Style for the table */
         table {
             border-collapse: collapse;
             width: 100%;
@@ -25,10 +24,9 @@
         }
 
         tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background-color: #CAEDFF;
         }
 
-        /* Style for the images */
         .image img {
             max-width: 100px;
             max-height: 100px;
@@ -67,6 +65,7 @@
                 <th>Item Image</th>
                 <th>Item Name</th>
                 <th>Item Price</th>
+                <th>Edit</th>
                 <th>View More</th>
             </tr>
         </thead>
@@ -76,6 +75,7 @@
                     <td class="image"><img src="<%= item.SellerItemImage %>" alt="<%= item.SellerItemName %>" width="100"></td>
                     <td><%= item.SellerItemName %></td>
                     <td>₹<%= item.SellerItemPrice %></td>
+                    <td><a href="/remove-from-wishlist/<%= item.SellerItemName %>"><img src="assets/images/rmwish.png"></a></td>
                     <td><a href="/item/<%= item.SellerCategory %>/<%= item.SellerItemName %>">View More</a></td>
                 </tr>
             <% }); %>

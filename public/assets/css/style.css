@@ -7,6 +7,7 @@
 
 body{
     font-family: 'Bricolage Grotesque', sans-serif;
+    background-color: #EEEEEE;
 }
 
 header{
@@ -21,8 +22,16 @@ header{
 }
 
 footer{
-    padding: 1vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
     background-color: lightgray;
+}
+
+.message{
+    display: flex;
+    align-items: center;
 }
 
 .mylogo{
@@ -68,7 +77,6 @@ nav ul li a{
     align-items: center;
 }
 
-/* CSS for the dropdown menu */
 .category-dropdown {
     position: relative;
 }
@@ -96,19 +104,17 @@ nav ul li a{
     display: block;
 }
   
-/* Style for the login button */
 .btn {
     background-color: white;
-    color: #333; /* Text color */
+    color: #333;
     padding: 10px 20px;
     text-decoration: none;
-    border: 2px solid #333; /* Border style */
-    border-radius: 5px; /* Rounded corners */
+    border: 2px solid #333;
+    border-radius: 5px;
     display: inline-block;
-    transition: background-color 0.3s ease; /* Smooth transition for background color */
+    transition: background-color 0.3s ease;
   }
   
-/* Style for the logged-in button */
 .btn-loggedin {
 background-color: #333;
 color: white; /* Text color */
@@ -120,11 +126,9 @@ display: inline-block;
 transition: background-color 0.3s ease; /* Smooth transition for background color */
 }
 
-/* Change the background color of the logged-in button on hover */
 .btn-loggedin:hover {
 background-color: #555;
 }  
-
 
 .btn a{
     color: #2874F0;
@@ -135,7 +139,6 @@ background-color: #555;
     margin-left: 0.5rem;
 }
   
-
 .sec .container{
     padding-top: 2vh;
     display: flex;
@@ -152,8 +155,6 @@ background-color: #555;
     text-align: center;
 }
 
-/* Define styles for the seller-items section */
-/* Style the seller-items section */
 .seller-items-container{
     padding: 10px;
 }
@@ -163,7 +164,6 @@ background-color: #555;
     padding: 10px;
 }
 
-/* Define styles for the seller-items list */
 .seller-items-list {
     list-style-type: none;
     padding: 0;
@@ -180,24 +180,20 @@ background-color: #555;
     height: 150px;
 }
 
-/* Define styles for the seller item image */
 .seller-item-image {
     width: 100%;
 }
 
-/* Define styles for the seller item price */
 .seller-item-price, .seller-item-name {
     text-align: center;
     font-size: 18px;
 }
 
-/* Style the item description */
 .seller-item p {
     font-size: 14px;
     color: #333;
 }
 
-/* Style the "View More" button */
 .vmbtn {
     display: flex;
     justify-content: center;
@@ -220,15 +216,59 @@ background-color: #555;
     background-color: #0056b3;
 }
 
+.container1 {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0 25vw;
+}
 
-/* seller */
-.sec1 .container1{
-    height: calc(100vh - 80px);
-    padding-top: 2vh;
-    display: flex;
-    background-color: lightgray;
-    justify-content: space-around;
-    align-items: center;
+.inputs {
+    margin-bottom: 20px;
+}
+
+.sec1 label {
+    font-weight: bold;
+    display: block;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#item-image {
+    display: block;
+    margin-top: 10px;
+}
+
+.input_btn button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.sec1 {
+    margin-top: 20px;
+}
+
+.inputs a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.inputs a:hover {
+    text-decoration: underline;
 }
 
 .item-details{

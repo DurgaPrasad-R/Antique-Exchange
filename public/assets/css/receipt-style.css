@@ -1,8 +1,7 @@
-/* receipt-style.css */
 body{
     font-family: 'Bricolage Grotesque', sans-serif;
 }
-/* Apply styles to the entire order confirmation container */
+
 .order-confirmation.receipt {
     max-width: 600px;
     margin: 0 auto;
@@ -12,13 +11,11 @@ body{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Header styles */
 .order-confirmation.receipt h2 {
     font-size: 24px;
     margin-bottom: 10px;
 }
 
-/* Items purchased list styles */
 .order-details ul {
     list-style: none;
     padding: 0;
@@ -32,7 +29,6 @@ body{
     font-size: 14px;
 }
 
-/* Back to dashboard link styles */
 .back-to-dashboard {
     display: inline-block;
     margin-top: 20px;

@@ -13,9 +13,7 @@
 <body>
     <%- include('header',{globalCategories: globalCategories}); -%>
     <%- include('section'); -%>
-    <!-- Display sellerItems -->
     <div class="seller-items-container">
-        <!-- Check if sellerItems object is not empty before rendering the section -->
         <% if (typeof sellerItems !== 'undefined' && Object.keys(sellerItems).length > 0) { %>
             <h2>New Arrivals</h2>
             <% for (const category in sellerItems) { %>
@@ -24,12 +22,10 @@
                     <% const categoryItems = sellerItems[category]; %>
                     <% for (let i = 0; i < Math.min(categoryItems.length,5); i++) { %>
                         <li class="seller-items">
-                            <!-- Display item details, you can modify this as needed -->
                             <div class="sellerimage"><img class="seller-item-image" src="<%= categoryItems[i].SellerItemImage %>" alt="Item Image"></div>
                             <h3 class="seller-item-name"><%= categoryItems[i].SellerItemName %></h3>
                             <p class="seller-item-price">MRP: ₹<%= categoryItems[i].SellerItemPrice %><span class="randomPrice">₹1500</span></p>
                         </li>
-                        <!-- Add a "View More" button at the end of each category -->
                         <% if (i === Math.min(categoryItems.length,4)) { %>
                             <div class="vmbtn"><a class="view-more-button" href="/category/<%= category %>">View More</a></div>
                         <% } %>
@@ -41,16 +37,11 @@
     <footer>
         &copy; Copyrights reserved. This is a platform where people can rent or let others rent items for special occassions or events.
         <div class="contact">
-            <p>Contact us: <button onclick="sendEmail()">Email</button></p>
+            <div class="message">
+                <div>Contact us:</div> <div><a href="mailto:antiqueexchangea@gmail.com"><img src="/assets/images/gmail.png" alt="gmail" width="40px"
+                    height="40px"/></a></div>
+            </div>
         </div>
     </footer>
-    <script type="text/javascript">
-        function sendEmail() {
-            const emailAddress = 'antiqueexchangea@gmail.com';
-
-            const mailtoLink = `mailto:${emailAddress}`;
-            window.location.href = mailtoLink;
-        }
-    </script>
 </body>
 </html>

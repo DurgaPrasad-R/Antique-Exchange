@@ -16,7 +16,7 @@
             gap: 20px;
             margin: 0 5vmin;
         }
-        /* Style the card container */
+
         .card {
         border: 1px solid #ccc;
         border-radius: 8px;
@@ -33,20 +33,17 @@
             width: 100%;
         }
 
-        /* Style the card when hovered */
         .card:hover {
         transform: scale(1.05);
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
-        /* Style the card image */
         .card-image {
         max-width: 100%;
         height: auto;
         border-radius: 8px;
         }
 
-        /* Style the card details */
         .card-details {
         padding: 10px;
         }
@@ -55,21 +52,18 @@
             color: #000;
         }
 
-        /* Style the card title */
         .card-title {
         font-size: 18px;
         font-weight: bold;
         margin: 0;
         }
 
-        /* Style the card price */
         .card-price {
         font-size: 16px;
-        color: #e91e63; /* Customize the color as needed */
+        color: #e91e63;
         margin: 0;
         }
 
-        /* Style the card description */
         .card-description {
         font-size: 14px;
         margin: 0;
@@ -78,15 +72,11 @@
 </head>
 <body>
     <%- include('header',{globalCategories: globalCategories}); -%>
-    <!-- Display categoryItems -->
     <div class="category-items">
-        <!-- Check if categoryItems object is not empty before rendering the section -->
         <% if (typeof categoryItems !== 'undefined' && categoryItems.length > 0) { %>
-            <!-- <h2><%= categoryItems[0].SellerCategory %></h2> -->
             <ul class="category-items-list">
                 <% categoryItems.forEach((item) => { %>
                     <li class="category-item">
-                        <!-- Display item details, you can modify this as needed -->
                         <div class="card">
                             <div class="containerImage">
                                 <a href="/item/<%= item.SellerCategory %>/<%= item.SellerItemName %>">

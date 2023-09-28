@@ -10,7 +10,6 @@
             <li><a href="/seller">Become a Seller</a></li>
             <li class="category-dropdown">
                 <a href="#">Categories</a>
-                <!-- Dropdown menu for categories -->
                 <ul class="category-menu">
                   <% globalCategories.forEach((category) => { %>
                     <li><a href="/category/<%= category %>"><%= category %></a></li>
@@ -26,12 +25,10 @@
             <li>
                 <div class="btn">
                     <% if (typeof session.userData === 'undefined') { %>
-                    <!-- Display the login button if the user is not logged in -->
                     <a href="/login">Login</a>
                   <% } else { %>
-                    <!-- Display user information if the user is logged in -->
                     <p>Welcome, <%= session.userData.Username %>!</p>
-                    <a href="/logout">Logout</a> <!-- Add a logout link if needed -->
+                    <a href="/logout">Logout</a>
                   <% } %></div>
             </li>
         </ul>

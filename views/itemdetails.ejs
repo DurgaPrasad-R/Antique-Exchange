@@ -8,11 +8,91 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        .contain {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .contain .Days,
+        .contain .quant,
+        .contain .flat,
+        .contain .area,
+        .contain .lmark,
+        .contain .city,
+        .contain .STATE,
+        .contain .Pincode{
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .contain input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .order-form {
+            width: 100%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-form label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .order-form input[type="text"],
+        .order-form input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .order-form .msg {
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .order-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Center items vertically */
+            margin-top: 10px; /* Adjust as needed */
+        }
+
+        .order-actions button,
+        .order-actions a {
+            padding: 10px 20px;
+            border-radius: 4px;
+            background-color: #3498db;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .order-actions button:hover,
+        .order-actions a:hover{
+            background-color: #0c3a9e;
+        }
+    </style>
 </head>
 <body>
     <%- include('header',{globalCategories:globalCategories}); -%>
     <div class="item-details">
-        <!-- Check if itemDetails object is not empty before rendering the section -->
         <% if (typeof itemDetails !== 'undefined') { %>
             <div class="item-details-content">
                 <div class="itemDetailImage">
@@ -27,15 +107,18 @@
                 </div>
             </div>
             <div class="order-form">
+                
                 <form action="/place-order" method="post">
                     <input type="hidden" name="itemDetails" value="<%= JSON.stringify(itemDetails) %>">
-                    <div class="Days">
-                        <label for="ndays">No. of days</label><br>
-                        <input type="number" name="NDays" id="ndays" required>
-                    </div>
-                    <div class="quant">
-                        <label for="quantity">Quantity</label><br>
-                        <input type="number" name="No" id="quantity" required>
+                    <div class="contain">
+                        <div class="Days">
+                            <label for="ndays">No. of days</label><br>
+                            <input type="number" name="NDays" id="ndays" required>
+                        </div>
+                        <div class="quant">
+                            <label for="quantity">Quantity</label><br>
+                            <input type="number" name="No" id="quantity" required>
+                        </div>
                     </div>
                     <div class="Fname">
                         <label for="fname">Full Name (First and Last)</label><br>
@@ -45,23 +128,27 @@
                         <label for="mobile">Mobile Number</label><br>
                         <input type="text" name="Mobile" id="mobile" required>
                     </div>
-                    <div class="flat">
-                        <label for="dno">House No./Flat No.</label><br>
-                        <input type="number" name="Flat" id="dno">
+                    <div class="contain">
+                        <div class="flat">
+                            <label for="dno">House No./Flat No.</label><br>
+                            <input type="number" name="Flat" id="dno">
+                        </div>
+                        <div class="area">
+                            <label for="street">Area,Street,Village</label><br>
+                            <input type="text" name="Street" id="street" required>
+                        </div>
                     </div>
-                    <div class="area">
-                        <label for="street">Area,Street,Village</label><br>
-                        <input type="text" name="Street" id="street" required>
-                    </div>
-                    <div class="lmark">
-                        <label for="landmark">Landmark</label><br>
-                        <input type="text" name="Landmark" id="landmark" required>
-                    </div>
-                    <div class="Place">
+                    <div class="contain">
+                        <div class="lmark">
+                            <label for="landmark">Landmark</label><br>
+                            <input type="text" name="Landmark" id="landmark" required>
+                        </div>
                         <div class="city">
                             <label for="town">Town/City</label><br>
                             <input type="text" name="Town/City" id="town" required>
                         </div>
+                    </div>
+                    <div class="contain">
                         <div class="STATE">
                             <label for="state">State</label><br>
                             <input type="text" name="State" id="state"required>
@@ -72,11 +159,11 @@
                         </div>
                     </div>
                     <div class="msg">Currently we prefer Cash On Delivery</div>
-                    <div class="buttons">
-                        <button class="placeOrder">Place Order</button>
+                    <div class="order-actions">
+                        <button type="submit" class="placeOrder">Place Order</button>
+                        <a href="/wishlist">Add to Wishlist</a>
                     </div>
                 </form>
-                <a href="/wishlist">Add to Wishlist</a>
             </div>
         <% } else { %>
             <p>Item details not found.</p>
