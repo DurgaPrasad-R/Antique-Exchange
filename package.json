@@ -1,0 +1,22 @@
+{
+  "name": "antiqueexchange",
+  "version": "1.0.0",
+  "description": "This is a full stack webapp",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "Durga Prasad",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "firebase": "^10.3.1",
+    "firebase-admin": "^11.10.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.0.1",
+    "password-hash": "^1.2.2"
+  }
+}
